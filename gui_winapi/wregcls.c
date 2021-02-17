@@ -1,17 +1,38 @@
 #include "../include.h"
 #include "wregcls.h"
 
-bool win_regclass(HINSTANCE hInst, WNDCLASSEX *wc) {
-	wc->hInstance = hInst;
+WNDCLASSEX WCLS_main = {
+    .cbSize        = sizeof(WNDCLASSEX),
+    .style         = WCLS_main_style,
+    .lpfnWndProc   = (WNDPROC) WCLS_main_proc,
+    .cbClsExtra    = 0,
+    .cbWndExtra    = 0,
+    .hInstance     = 0,
+    .hIcon         = (HICON) WCLS_main_icon,
+    .hCursor       = (HCURSOR) WCLS_main_cursor,
+    .hbrBackground = (HBRUSH) WCLS_main_bgcol,
+    .lpszMenuName  = (LPCSTR) WCLS_main_menu,
+    .lpszClassName = (LPCSTR) WCLS_main_name,
+    .hIconSm       = (HICON) WCLS_main_iconsm
+};
 
-	if (wc->hIcon) wc->hIcon = LoadIcon(hInst, (LPTSTR)wc->hIcon);
-	if (wc->hCursor) wc->hCursor = LoadCursor(hInst, (LPTSTR)wc->hCursor);
-	if (wc->lpszMenuName) wc->lpszMenuName = MAKEINTRESOURCE(wc->lpszMenuName);
-	LPCSTR name = "";
-	if (!wc->lpszClassName)	wc->lpszMenuName = name;
-	if (wc->hIconSm) wc->hIconSm = LoadImage(hInst, (LPTSTR)wc->hIconSm,
-		                               IMAGE_ICON, 16, 16, 0);
+extern TCHAR szError[MAX_LOADSTRING];
 
-	return RegisterClassEx(wc) != 0;
+bool win_regclass(HINSTANCE hInst, WNDCLASSEX *wc, TCHAR *wcname) {
+    wc->hInstance = hInst;
+
+    if (wc->hIcon)
+        wc->hIcon = LoadIcon(hInst, (LPTSTR)wc->hIcon);
+    if (wc->hCursor)
+        wc->hCursor = LoadCursor(NULL, (LPTSTR)wc->hCursor);
+    if (wc->lpszMenuName)
+        wc->lpszMenuName = MAKEINTRESOURCE(wc->lpszMenuName);
+    LPCSTR name = "";
+    if (!wc->lpszClassName)
+        wc->lpszClassName = wcname;
+    if (wc->hIconSm)
+        wc->hIconSm = LoadImage(hInst, (LPTSTR)wc->hIconSm,
+                                IMAGE_ICON, 16, 16, 0);
+    return RegisterClassEx(wc);
 }
 

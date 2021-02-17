@@ -1,0 +1,31 @@
+#include "include.h"
+
+
+STRINGTABLE {
+    IDS_WCLS_MAIN,                          "4PIC MAIN"
+    IDS_ABOUTTITLE,                         "About"
+    IDS_ABOUT,        "4Pic v.0.1\n\tby _KROL 2021 (C)"
+    IDS_ERROR,                              "Error!"
+}
+
+
+IDM_MAINMENU MENU {
+    POPUP "&File" {
+        MENUITEM "&Open\tCtrl-O",           IDM_OPEN
+        MENUITEM "&Save as...\tCtrl-S",     IDM_SAVEAS
+        MENUITEM "&Quit\tCtrl-Q",           IDM_QUIT
+    }
+    POPUP "&Script" {
+        MENUITEM "&Run...\tF9",             IDM_RUN
+    }
+    MENUITEM "About",                       IDM_ABOUT
+}
+
+
+APP_ACCELERATORS ACCELERATORS {
+    "O",        IDM_OPEN,       VIRTKEY, CONTROL
+    "S",        IDM_SAVEAS,     VIRTKEY, CONTROL
+    "Q",        IDM_QUIT,       VIRTKEY, CONTROL
+    VK_F9,      IDM_RUN,        VIRTKEY
+}
+
