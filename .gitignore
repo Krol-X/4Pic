@@ -1,0 +1,18 @@
+# Binary files
+*.exe
+*.lib
+*.dll
+*.o
+*.a
+
+# Dev-Cpp generated files
+*.def
+*.layout
+*.win
+*_private*
+
+# Other files
+*.log
+*.cfg
+*.bak
+*.manifest
