@@ -1,3 +1,4 @@
+#include <winuser.h>
 #include "include.h"
 
 
@@ -17,6 +18,7 @@ IDM_MAINMENU MENU {
     }
     POPUP "&Script" {
         MENUITEM "&Run...\tF9",             IDM_RUN
+        MENUITEM "Reload &default.src",     IDM_RELOAD_DEFAULT
     }
     MENUITEM "About",                       IDM_ABOUT
 }

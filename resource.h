@@ -22,6 +22,7 @@
 
 // Script
 #define IDM_RUN                         1101
+#define IDM_RELOAD_DEFAULT              1102
 
 // Help
 #define IDM_ABOUT                       1200

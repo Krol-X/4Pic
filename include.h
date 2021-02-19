@@ -9,13 +9,19 @@
 #define MAX_LOADSTRING 64
 
 #pragma pack(4)
-#include <windows.h>
+
 #include <tchar.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
 
+#ifdef USE_WINAPI
+#  include <windows.h>
+//#  include <commctrl.h>
+#endif
+
+#include "main.h"
 #include "resource.h"
 #include "tools.h"
 

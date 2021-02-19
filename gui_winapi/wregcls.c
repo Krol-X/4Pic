@@ -4,15 +4,15 @@
 WNDCLASSEX WCLS_main = {
     .cbSize        = sizeof(WNDCLASSEX),
     .style         = WCLS_main_style,
-    .lpfnWndProc   = (WNDPROC) WCLS_main_proc,
+    .lpfnWndProc   = (WNDPROC) WinMain_proc,
     .cbClsExtra    = 0,
     .cbWndExtra    = 0,
     .hInstance     = 0,
     .hIcon         = (HICON) WCLS_main_icon,
     .hCursor       = (HCURSOR) WCLS_main_cursor,
     .hbrBackground = (HBRUSH) WCLS_main_bgcol,
-    .lpszMenuName  = (LPCSTR) WCLS_main_menu,
-    .lpszClassName = (LPCSTR) WCLS_main_name,
+    .lpszMenuName  = (LPTSTR) WCLS_main_menu,
+    .lpszClassName = (LPTSTR) WCLS_main_name,
     .hIconSm       = (HICON) WCLS_main_iconsm
 };
 
@@ -27,7 +27,7 @@ bool win_regclass(HINSTANCE hInst, WNDCLASSEX *wc, TCHAR *wcname) {
         wc->hCursor = LoadCursor(NULL, (LPTSTR)wc->hCursor);
     if (wc->lpszMenuName)
         wc->lpszMenuName = MAKEINTRESOURCE(wc->lpszMenuName);
-    LPCSTR name = "";
+    LPTSTR name = TEXT("");
     if (!wc->lpszClassName)
         wc->lpszClassName = wcname;
     if (wc->hIconSm)

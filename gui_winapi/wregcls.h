@@ -2,7 +2,7 @@
 #define wregcls_h_
 
 #define WCLS_main_style CS_HREDRAW | CS_VREDRAW
-#define WCLS_main_proc WinMain_proc
+#define WCLS_main_proc MyBitmapWindowProc
 #define WCLS_main_icon 0
 #define WCLS_main_iconsm 0
 #define WCLS_main_cursor IDC_ARROW

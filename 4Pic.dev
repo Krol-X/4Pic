@@ -10,8 +10,8 @@ PrivateResource=4Pic_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=-DUSE_WINAPI_@@_
-CppCompiler=
-Linker=
+CppCompiler=-DUSE_WINAPI_@@_
+Linker=-lgdiplus_@@_
 IsCpp=0
 Icon=
 ExeOutput=
@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
 CompilerSettings=0000000100000000001000000
-UnitCount=16
+UnitCount=19
 
 [VersionInfo]
 Major=1
@@ -202,6 +202,36 @@ BuildCmd=
 FileName=gui_winapi\win_main.h
 CompileCpp=0
 Folder=gui_winapi
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=gui_winapi\image.cpp
+CompileCpp=1
+Folder=gui_winapi
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CPP) -c image.cpp -o image.o $(CXXFLAGS)
+
+[Unit18]
+FileName=gui_winapi\image.h
+CompileCpp=0
+Folder=gui_winapi
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=main.h
+CompileCpp=0
+Folder=
 Compile=1
 Link=1
 Priority=1000
