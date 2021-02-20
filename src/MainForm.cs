@@ -74,8 +74,8 @@ namespace _4Pic
         private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
             int hb_h = SystemInformation.HorizontalScrollBarHeight,
                 hb_w = SystemInformation.VerticalScrollBarWidth;
-            Point xy = Cursor.Position;
-            Point area_xy = FlowPanel.PointToScreen(Point.Empty);
+            Point xy = Cursor.Position,
+                  area_xy = FlowPanel.PointToScreen(Point.Empty);
             int h = FlowPanel.Height - hb_h;
             Rectangle rect = new Rectangle(
                 area_xy.X, area_xy.Y + h,
