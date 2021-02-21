@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace _4Pic
 {
@@ -56,19 +49,7 @@ namespace _4Pic
 
         private void SaveAsDialog_FileOk(object sender, CancelEventArgs e) {
             var str = SaveAsDialog.FileName;
-            MainCanvas.Image.Save(str, ParseImageFormat(Path.GetExtension(str).Substring(1)));
-        }
-
-        public static ImageFormat ParseImageFormat(string str) {
-            ImageFormat result;
-            try {
-                result = (ImageFormat)typeof(ImageFormat)
-                        .GetProperty(str, BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase)
-                        .GetValue(str, null);
-            } catch {
-                result = ImageFormat.Bmp;
-            }
-            return result;
+            MainCanvas.Image.Save(str, Tools.ParseImageFormat(Path.GetExtension(str).Substring(1)));
         }
 
         private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
