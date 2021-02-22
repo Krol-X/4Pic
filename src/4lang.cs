@@ -6,7 +6,7 @@ namespace _4Pic.src
 {
     using VMTable = Dictionary<byte, ArrayList>;
 
-    class _4lang
+    public static class _4lang
     {
         public static VMTable vmtable = new VMTable {
 			// Mathemathic functions

@@ -36,6 +36,14 @@
             this.OpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveAsDialog = new System.Windows.Forms.SaveFileDialog();
             this.FlowPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.MainMenu_Image = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_tobinary = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_sep1 = new System.Windows.Forms.ToolStripSeparator();
+            this.MainMenu_tonegative = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_tograyscale = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_tosepia = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_bri_con = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_filter = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainCanvas)).BeginInit();
             this.FlowPanel.SuspendLayout();
@@ -45,6 +53,7 @@
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MainMenu_File,
+            this.MainMenu_Image,
             this.MainMenu_Script});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
@@ -128,6 +137,67 @@
             this.FlowPanel.Size = new System.Drawing.Size(560, 347);
             this.FlowPanel.TabIndex = 2;
             // 
+            // MainMenu_Image
+            // 
+            this.MainMenu_Image.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MainMenu_tonegative,
+            this.MainMenu_tograyscale,
+            this.MainMenu_tosepia,
+            this.MainMenu_tobinary,
+            this.MainMenu_sep1,
+            this.MainMenu_bri_con,
+            this.MainMenu_filter});
+            this.MainMenu_Image.Name = "MainMenu_Image";
+            this.MainMenu_Image.Size = new System.Drawing.Size(95, 20);
+            this.MainMenu_Image.Text = "Изображение";
+            // 
+            // MainMenu_tobinary
+            // 
+            this.MainMenu_tobinary.Name = "MainMenu_tobinary";
+            this.MainMenu_tobinary.Size = new System.Drawing.Size(211, 22);
+            this.MainMenu_tobinary.Text = "Бинаризация";
+            this.MainMenu_tobinary.Click += new System.EventHandler(this.MainMenu_tobinary_Click);
+            // 
+            // MainMenu_sep1
+            // 
+            this.MainMenu_sep1.Name = "MainMenu_sep1";
+            this.MainMenu_sep1.Size = new System.Drawing.Size(208, 6);
+            // 
+            // MainMenu_tonegative
+            // 
+            this.MainMenu_tonegative.Name = "MainMenu_tonegative";
+            this.MainMenu_tonegative.Size = new System.Drawing.Size(211, 22);
+            this.MainMenu_tonegative.Text = "В негатив";
+            this.MainMenu_tonegative.Click += new System.EventHandler(this.MainMenu_tonegative_Click);
+            // 
+            // MainMenu_tograyscale
+            // 
+            this.MainMenu_tograyscale.Name = "MainMenu_tograyscale";
+            this.MainMenu_tograyscale.Size = new System.Drawing.Size(211, 22);
+            this.MainMenu_tograyscale.Text = "В оттенки серого";
+            this.MainMenu_tograyscale.Click += new System.EventHandler(this.MainMenu_tograyscale_Click);
+            // 
+            // MainMenu_tosepia
+            // 
+            this.MainMenu_tosepia.Name = "MainMenu_tosepia";
+            this.MainMenu_tosepia.Size = new System.Drawing.Size(211, 22);
+            this.MainMenu_tosepia.Text = "В сепию";
+            this.MainMenu_tosepia.Click += new System.EventHandler(this.MainMenu_tosepia_Click);
+            // 
+            // MainMenu_bri_con
+            // 
+            this.MainMenu_bri_con.Name = "MainMenu_bri_con";
+            this.MainMenu_bri_con.Size = new System.Drawing.Size(211, 22);
+            this.MainMenu_bri_con.Text = "Яркость и контрастность";
+            this.MainMenu_bri_con.Click += new System.EventHandler(this.MainMenu_bri_con_Click);
+            // 
+            // MainMenu_filter
+            // 
+            this.MainMenu_filter.Name = "MainMenu_filter";
+            this.MainMenu_filter.Size = new System.Drawing.Size(211, 22);
+            this.MainMenu_filter.Text = "Фильтрация";
+            this.MainMenu_filter.Click += new System.EventHandler(this.MainMenu_filter_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -147,6 +217,7 @@
             this.FlowPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -162,6 +233,14 @@
         private System.Windows.Forms.OpenFileDialog OpenDialog;
         private System.Windows.Forms.SaveFileDialog SaveAsDialog;
         private System.Windows.Forms.FlowLayoutPanel FlowPanel;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_Image;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_tonegative;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_tograyscale;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_tosepia;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_tobinary;
+        private System.Windows.Forms.ToolStripSeparator MainMenu_sep1;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_bri_con;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_filter;
     }
 }
 

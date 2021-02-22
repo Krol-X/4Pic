@@ -36,8 +36,8 @@ namespace _4Pic.src
             f_error = false;
         }
 
-        public Image Evaluate(ref Image image) {
-            this.image = Tools.imageToByteArray(ref image);
+        public Bitmap Evaluate(Bitmap image) {
+            //this.image = Tools.BitmapToByteArray(image);
             this.if_depth = 0;
             this.f_error = false;
             this.ip = 0;
@@ -46,7 +46,8 @@ namespace _4Pic.src
                 F fun = (F)_4lang.vmtable[mem[ip++]][1];
                 fun(this);
             }
-            return Tools.byteArrayToImage(ref this.image);
+            //return Tools.ByteArrayToBitmap(ref this.image, image.Width, image.Height);
+            return image;
         }
 
         //
@@ -254,7 +255,7 @@ namespace _4Pic.src
         internal static void _qbranch(Interpreter state) {
             if (state.Assert(state.if_depth > 0, "ELSE: не был открыт IF!")) {
                 state.if_depth--;
-                state.f_scan_endif = !state.f_scan_endif;
+                //state.f_scan_endif = !state.f_scan_endif;
             }
         }
 
