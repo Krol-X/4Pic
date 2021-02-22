@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace _4Pic
 {
@@ -21,16 +22,23 @@ namespace _4Pic
             return result;
         }
 
-        public static byte[] imageToByteArray(System.Drawing.Image imageIn) {
+        public static byte[] imageToByteArray(ref Image imageIn) {
             MemoryStream ms = new MemoryStream();
             imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
             return ms.ToArray();
         }
 
-        public static Image byteArrayToImage(byte[] byteArrayIn) {
+        public static Image byteArrayToImage(ref byte[] byteArrayIn) {
             MemoryStream ms = new MemoryStream(byteArrayIn);
             Image returnImage = Image.FromStream(ms);
             return returnImage;
+        }
+
+        public static byte[] listToByteArray(ref List<byte> lst) {
+            var binFormatter = new BinaryFormatter();
+            var mStream = new MemoryStream();
+            binFormatter.Serialize(mStream, lst);
+            return mStream.ToArray();
         }
     }
 

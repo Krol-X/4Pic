@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace _4Pic.src
@@ -41,14 +42,15 @@ namespace _4Pic.src
 			{0x2C, new ArrayList { "s@",       (F)Interpreter.copys} },
 			{0x2D, new ArrayList { "s-switch", (F)Interpreter.sswitch} },
 			// Control functions
-			{0x40, new ArrayList { "if",    (F)Interpreter._if} },
-			{0x41, new ArrayList { "else",  (F)Interpreter._else} },
-			{0x42, new ArrayList { "then",  (F)Interpreter._then} },
+			{0x40, new ArrayList { "if",    (F)Interpreter._qbranch} }, 
+			{0x41, new ArrayList { "else",  (F)Interpreter._branch} },
+			{0x42, new ArrayList { "then",  (F)Interpreter.nop} },
 			{0x43, new ArrayList { "exit",  (F)Interpreter.exit} },
 			{0x44, new ArrayList { "?exit", (F)Interpreter.qexit} },
 			{0x45, new ArrayList { "",      (F)Interpreter.call} },
             {0x48, new ArrayList { ":",     (F)Interpreter.define} },
             {0x49, new ArrayList { ";",     (F)Interpreter.enddefine} },
+            {0x4F, new ArrayList { "stop",  (F)Interpreter.stop} },
 			// Values functions
 			{0x50, new ArrayList { "get:",  (F)Interpreter.getvar} },
 			{0x51, new ArrayList { "set:",  (F)Interpreter.setvar} },

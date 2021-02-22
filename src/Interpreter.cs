@@ -5,28 +5,55 @@ using System.Linq;
 
 namespace _4Pic.src
 {
-    public delegate void F(ref Interpreter obj);
+    public delegate void F(Interpreter obj);
 
     public class Interpreter
     {
         public const double TRUE = -1, FALSE = 0;
+
+        public byte[] image;
         public StackX<Double>[] stack;
         public int stack_cur;
-        public bool error = false;
-        public Image image;
-        
+        public StackX<int> rstack;
+        private byte[] mem;
+        private int ip;
+        private int if_depth;
+        private bool f_running, f_error;
+
         public bool Assert(bool flag, string s) {
             if (!flag) {
                 MessageBox.Show(s, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                error = true;
+                f_error = true;
             }
-            return !error;
+            return !f_error;
         }
 
-        public Interpreter(char[] program) {
+        public Interpreter(ref byte[] bytecode) {
+            mem = bytecode;
             stack = new StackX<double>[2];
             stack_cur = 0;
+            rstack = new StackX<int>();
+            f_error = false;
         }
+
+        public Image Evaluate(ref Image image) {
+            this.image = Tools.imageToByteArray(ref image);
+            this.if_depth = 0;
+            this.f_error = false;
+            this.ip = 0;
+            this.f_running = false;
+            while (f_running) {
+                F fun = (F)_4lang.vmtable[mem[ip++]][1];
+                fun(this);
+            }
+            return Tools.byteArrayToImage(ref this.image);
+        }
+
+        //
+        // VM Primitives
+        //
+
+        internal static void nop(Interpreter state) { }
 
         // Stack internal functions
 
@@ -47,54 +74,54 @@ namespace _4Pic.src
         //
         // Mathemathic functions
         //
-        internal static void floor(ref Interpreter state) {
+        internal static void floor(Interpreter state) {
             state.Push(Math.Floor(state.Pop()));
         }
 
-        internal static void ceil(ref Interpreter state) {
+        internal static void ceil(Interpreter state) {
             state.Push(Math.Ceiling(state.Pop()));
         }
 
-        internal static void within(ref Interpreter state) {
+        internal static void within(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
             var x = state.Pop();
             state.Push((a <= x && x <= b)? TRUE: FALSE);
         }
 
-        internal static void pow(ref Interpreter state) {
+        internal static void pow(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
             state.Push(Math.Pow(a, b));
         }
 
-        internal static void inc(ref Interpreter state) {
+        internal static void inc(Interpreter state) {
             state.Push(state.Pop() + 1);
         }
 
-        internal static void dec(ref Interpreter state) {
+        internal static void dec(Interpreter state) {
             state.Push(state.Pop() - 1);
         }
 
-        internal static void plus(ref Interpreter state) {
+        internal static void plus(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
             state.Push(a + b);
         }
 
-        internal static void minus(ref Interpreter state) {
+        internal static void minus(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
             state.Push(a - b);
         }
 
-        internal static void mul(ref Interpreter state) {
+        internal static void mul(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
             state.Push(a * b);
         }
 
-        internal static void divide(ref Interpreter state) {
+        internal static void divide(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
             if (state.Assert(b != 0, "/%: На ноль делить нельзя!")) {
@@ -102,82 +129,82 @@ namespace _4Pic.src
             }
         }
 
-        internal static void and(ref Interpreter state) {
+        internal static void and(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
-            state.Push((uint)a & (uint)b);
+            state.Push((int)a & (int)b);
         }
 
-        internal static void or(ref Interpreter state) {
+        internal static void or(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
-            state.Push((uint)a | (uint)b);
+            state.Push((int)a | (int)b);
         }
 
-        internal static void xor(ref Interpreter state) {
+        internal static void xor(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
-            state.Push((uint)a ^ (uint)b);
+            state.Push((int)a ^ (int)b);
         }
 
-        internal static void abs(ref Interpreter state) {
+        internal static void abs(Interpreter state) {
             state.Push(Math.Abs(state.Pop()));
         }
 
-        internal static void neg(ref Interpreter state) {
+        internal static void neg(Interpreter state) {
             state.Push(-state.Pop());
         }
 
-        internal static void not(ref Interpreter state) {
+        internal static void not(Interpreter state) {
             state.Push(state.Pop() == TRUE? FALSE: TRUE);
         }
 
         //
         // Stack functions
         //
-        internal static void dropall(ref Interpreter state) {
+        internal static void dropall(Interpreter state) {
             state.stack[state.stack_cur].Clear();
         }
 
-        internal static void sdropall(ref Interpreter state) {
+        internal static void sdropall(Interpreter state) {
             state.stack[state.stack_cur ^ 1].Clear();
         }
 
-        internal static void drop(ref Interpreter state) {
+        internal static void drop(Interpreter state) {
             state.Pop();
         }
 
-        internal static void sdrop(ref Interpreter state) {
+        internal static void sdrop(Interpreter state) {
             var sstack = state.stack[state.stack_cur ^ 1];
             sstack.Pop();
         }
 
-        internal static void dup(ref Interpreter state) {
+        internal static void dup(Interpreter state) {
             var x = state.Pop();
             state.Push(x, x);
         }
 
-        internal static void qdup(ref Interpreter state) {
+        internal static void qdup(Interpreter state) {
             var x = state.Pop();
             state.Push(x);
             if (x != FALSE)
                 state.Push(x);
         }
 
-        internal static void swap(ref Interpreter state) {
+        internal static void swap(Interpreter state) {
             var b = state.Pop();
             var a = state.Pop();
             state.Push(a, b);
         }
 
-        internal static void rot(ref Interpreter state) {
+        internal static void rot(Interpreter state) {
             var c = state.Pop();
             var b = state.Pop();
             var a = state.Pop();
             state.Push(b, c, a);
         }
 
-        internal static void pick(ref Interpreter state) {
+        internal static void pick(Interpreter state) {
             var stack = state.stack[state.stack_cur];
             var i = (int)stack.Pop();
             if ( state.Assert(i >= 0 && i < stack.Count,
@@ -186,7 +213,7 @@ namespace _4Pic.src
             }
         }
 
-        internal static void roll(ref Interpreter state) {
+        internal static void roll(Interpreter state) {
             var stack = state.stack[state.stack_cur];
             var i = (int)stack.Pop();
             if (state.Assert(i >= 0 && i < stack.Count,
@@ -198,83 +225,94 @@ namespace _4Pic.src
             }
         }
 
-        internal static void froms(ref Interpreter state) {
+        internal static void froms(Interpreter state) {
             var sstack = state.stack[state.stack_cur ^ 1];
             state.Push(sstack.Pop());
         }
 
-        internal static void tos(ref Interpreter state) {
+        internal static void tos(Interpreter state) {
             var sstack = state.stack[state.stack_cur ^ 1];
             sstack.Push(state.Pop());
         }
 
-        internal static void copys(ref Interpreter state) {
+        internal static void copys(Interpreter state) {
             var sstack = state.stack[state.stack_cur ^ 1];
             state.Push(sstack.Peek());
         }
 
-        internal static void sswitch(ref Interpreter state) {
+        internal static void sswitch(Interpreter state) {
             state.stack_cur ^= 1;
         }
 
         //
         // Control functions
         //
-        internal static void _if(ref Interpreter state) {
+        internal static void _branch(Interpreter state) {
+            
+        }
+
+        internal static void _qbranch(Interpreter state) {
+            if (state.Assert(state.if_depth > 0, "ELSE: не был открыт IF!")) {
+                state.if_depth--;
+                state.f_scan_endif = !state.f_scan_endif;
+            }
+        }
+
+        internal static void exit(Interpreter state) {
+            var stack = state.rstack;
+            if (stack.Count > 0) {
+                state.ip = (int)stack.Pop();
+            } else {
+                state.f_running = false;
+            }
+        }
+
+        internal static void qexit(Interpreter state) {
+            if (state.Pop() == FALSE) {
+                exit(state);
+            }
+        }
+
+        internal static void call(Interpreter state) {
+            state.rstack.Push(state.ip);
+            state.ip = state.mem[state.ip++];
+        }
+
+        internal static void define(Interpreter state) {
             throw new NotImplementedException();
         }
 
-        internal static void _else(ref Interpreter state) {
+        internal static void enddefine(Interpreter state) {
             throw new NotImplementedException();
         }
 
-        internal static void _then(ref Interpreter state) {
-            throw new NotImplementedException();
-        }
-
-        internal static void exit(ref Interpreter state) {
-            throw new NotImplementedException();
-        }
-
-        internal static void qexit(ref Interpreter state) {
-            throw new NotImplementedException();
-        }
-
-        internal static void call(ref Interpreter state) {
-            throw new NotImplementedException();
-        }
-
-        internal static void define(ref Interpreter state) {
-            throw new NotImplementedException();
-        }
-
-        internal static void enddefine(ref Interpreter state) {
-            throw new NotImplementedException();
+        internal static void stop(Interpreter state) {
+            state.f_running = false;
         }
 
         //
         // Values functions
         //
-        internal static void getvar(ref Interpreter state) {
+        internal static void getvar(Interpreter state) {
             throw new NotImplementedException();
         }
 
-        internal static void setvar(ref Interpreter state) {
+        internal static void setvar(Interpreter state) {
             throw new NotImplementedException();
         }
 
-        internal static void lit(ref Interpreter state) {
+        internal static void lit(Interpreter state) {
             throw new NotImplementedException();
         }
 
-        internal static void litsz(ref Interpreter state) {
+        internal static void litsz(Interpreter state) {
             throw new NotImplementedException();
         }
 
         //
         // IO functions
         //
-        internal static void input(ref Interpreter state) {
+        internal static void input(Interpreter state) {
             throw new NotImplementedException();
         }
     }
