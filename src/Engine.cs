@@ -8,56 +8,44 @@ namespace _4Pic.src
 {
     public static class Engine
     {
-        private const int MAX_THREADS = 24;
-        public unsafe delegate Color pixel_hnd(Color pixel);
+        private const int PARTS_N = 24;
+        private static bool USE_PARALLEL = false;
+        public delegate void pixel_hnd(ref byte[] im, int off);
 
-        public unsafe static void do_pixel(Bitmap image, pixel_hnd hnd) {
-            int pixsz = Image.GetPixelFormatSize(image.PixelFormat) >> 3;
-            var size = image.Width * image.Height * pixsz;
-            var partsz = size / MAX_THREADS;
-            var lastpartsz = size % MAX_THREADS;
+        public static Bitmap do_pixel(Bitmap image, pixel_hnd hnd) {
+            int pixsize = 4, w = image.Width, h = image.Height;
+            int bytes = w * h * pixsize;
 
-            //BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, image.PixelFormat);
-            //int w = image.Width;
+            var imData = image.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadWrite,
+                                      PixelFormat.Format32bppArgb);  
+            byte[] data = new byte[bytes];
+            Marshal.Copy(imData.Scan0, data, 0, bytes);
 
-            //IntPtr ptr = data.Scan0;                                         
-            //int bytes = image.Width * image.Height;
-            LockBitmap bmp = new LockBitmap(image);
-            bmp.LockBits();
-            for (int j=0; j<bmp.Height; j++) {
-                for (int i=0; i< bmp.Width; i++) {
-                    bmp.SetPixel(i, j, hnd(bmp.GetPixel(i, j)));
+            if (USE_PARALLEL) {
+                var partsz = bytes / PARTS_N;
+                // FIXIT: some bug???
+                Parallel.For(0, PARTS_N, j => {
+                    var pos = j * partsz;
+                    for (int i = 0; i < partsz; i++) {
+                        hnd(ref data, pos + i);
+                    }
+                });
+                if (bytes % PARTS_N != 0) {
+                    var pos = PARTS_N * partsz;
+                    var bound = bytes - pos - pixsize + 1;
+                    for (int i = 0; i < bound; i++) {
+                        hnd(ref data, pos + i);
+                    }
+                }
+            } else {
+                for (int i = 0; i < bytes; i += pixsize) {
+                    hnd(ref data, i);
                 }
             }
-            //for (int i = 0; i < bmp.Width*bmp.Height; i++) {
-            //    bmp.SetPixel(i, hnd(bmp.GetPixel(i)));
-            //}
-            bmp.UnlockBits();
 
-            //for (int j=0; j<image.Height; j++) {
-            //    for (int i=0; i<image.Width; i++) {
-            //        image.SetPixel(i, j, hnd(image.GetPixel(i, j)));
-            //    }
-            //}
-            //for (int i = 0; i < size; i++) {
-                //rgb[i] = hnd(rgb[i]);
-            //}
-            /*
-            Parallel.For(0, MAX_THREADS, j => {
-                var line = rgb + j * partsz;
-                for (int i = 0; i < partsz; i++) {
-                    line[i] = hnd(line[i]);
-                }
-            });
-            if (lastpartsz != 0) {
-                var line = rgb + MAX_THREADS * partsz;
-                for (int i = 0; i < lastpartsz; i++) {
-                    line[i] = hnd(line[i]);
-                }
-            }
-            */
-
-            // image.UnlockBits(data);
+            Marshal.Copy(data, 0, imData.Scan0, bytes);
+            image.UnlockBits(imData);
+            return image;
         }
     }
 }

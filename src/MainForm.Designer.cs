@@ -108,7 +108,6 @@
             this.MainMenu_Run.ShortcutKeys = System.Windows.Forms.Keys.F9;
             this.MainMenu_Run.Size = new System.Drawing.Size(164, 22);
             this.MainMenu_Run.Text = "Выполнить...";
-            this.MainMenu_Run.Click += new System.EventHandler(this.MainMenu_Run_Click);
             // 
             // MainCanvas
             // 
@@ -122,11 +121,11 @@
             // 
             // OpenDialog
             // 
-            this.OpenDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenDialog_FileOk);
+            this.OpenDialog.FileOk += this.OpenDialog_FileOk;
             // 
             // SaveAsDialog
             // 
-            this.SaveAsDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.SaveAsDialog_FileOk);
+            this.SaveAsDialog.FileOk += this.SaveAsDialog_FileOk;
             // 
             // FlowPanel
             // 
@@ -229,7 +228,7 @@
         private System.Windows.Forms.ToolStripMenuItem MainMenu_Exit;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_Script;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_Run;
-        private System.Windows.Forms.PictureBox MainCanvas;
+        public System.Windows.Forms.PictureBox MainCanvas;
         private System.Windows.Forms.OpenFileDialog OpenDialog;
         private System.Windows.Forms.SaveFileDialog SaveAsDialog;
         private System.Windows.Forms.FlowLayoutPanel FlowPanel;

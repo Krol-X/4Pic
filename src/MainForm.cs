@@ -9,7 +9,7 @@ namespace _4Pic
 {
     public partial class MainForm : Form
     {
-        private static string FILTER_WILDCARDS = "Поддерживаемые файлы|*.bmp;*.png;*.jpg;*.jpeg|Bitmap-файлы|*.bmp|PNG-файлы|*.png|JPEG-файлы|*.jpg;*.jpeg|Все файлы|*.*";
+        static string FILTER_WILDCARDS = "Поддерживаемые файлы|*.bmp;*.png;*.jpg;*.jpeg|Bitmap-файлы|*.bmp|PNG-файлы|*.png|JPEG-файлы|*.jpg;*.jpeg|Все файлы|*.*";
         Image image;
 
         public MainForm() {
@@ -39,7 +39,7 @@ namespace _4Pic
             }
         }
 
-  
+
         #region MainMenu_File Handlers
 
         private void MainMenu_Open_Click(object sender, EventArgs e) {
@@ -54,12 +54,8 @@ namespace _4Pic
             this.Close();
         }
 
-        private void MainMenu_Run_Click(object sender, EventArgs e) {
-            //
-        }
-
         ///////////////////////////////////////////////////////////////////////
-      
+
         private void OpenDialog_FileOk(object sender, CancelEventArgs e) {
             try {
                 var im = Image.FromFile(OpenDialog.FileName);
@@ -80,25 +76,38 @@ namespace _4Pic
 
         #region MainMenu_Image Handlers
 
-        private unsafe void MainMenu_tonegative_Click(object sender, EventArgs e) {
+        private void negative(ref byte[] im, int i) {
+            im[i + 0] ^= 0xFF;
+            im[i + 1] ^= 0xFF;
+            im[i + 2] ^= 0xFF;
+        }
+        private void MainMenu_tonegative_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                Engine.do_pixel((Bitmap)image, pix => Color.FromArgb(pix.ToArgb() ^ 0xFFFFFF));
-                MainCanvas.Image = image;
+                MainCanvas.Image = Engine.do_pixel((Bitmap)image, negative);
             }
         }
 
-        private unsafe void MainMenu_tograyscale_Click(object sender, EventArgs e) {
+        public void grayscale(ref byte[] im, int i) {
+            byte hue = (byte)Math.Min(255, im[i + 0] * 0.299 + im[i + 1] * 0.587 + im[i + 2] * 0.114);
+            im[i + 0] = im[i + 1] = im[i + 2] = hue;
+        }
+        private void MainMenu_tograyscale_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                Engine.do_pixel((Bitmap)image, pix => {
-                    byte hue = (byte)Math.Max(0, Math.Min(255, pix.R * 0.299 + pix.G * 0.587 + pix.B * 0.114));
-                    return Color.FromArgb(hue, hue, hue);
-                });
-                MainCanvas.Image = image;
+                MainCanvas.Image =  Engine.do_pixel((Bitmap)image, grayscale);
             }
         }
 
-        private unsafe void MainMenu_tosepia_Click(object sender, EventArgs e) {
-
+        private void sepia(ref byte[] im, int i) {
+            int k = 8; // ?
+            var mid = (im[i + 0] + im[i + 1] + im[i + 2]) / 3;
+            im[i + 0] = Tools.FixPix(mid + k*2);
+            im[i + 1] = Tools.FixPix(mid + k);
+            im[i + 2] = Tools.FixPix(mid);
+        }
+        private void MainMenu_tosepia_Click(object sender, EventArgs e) {
+            if (MainCanvas.Image != null) {
+                MainCanvas.Image = Engine.do_pixel((Bitmap)image, sepia);
+            }
         }
 
         private void MainMenu_tobinary_Click(object sender, EventArgs e) {
@@ -106,7 +115,12 @@ namespace _4Pic
         }
 
         private void MainMenu_bri_con_Click(object sender, EventArgs e) {
-
+            BriConForm form = new BriConForm(this, image);
+            if (form.ShowDialog() == DialogResult.OK) {
+                image = form.image; 
+            } else {
+                MainCanvas.Image = image;
+            }
         }
 
         private void MainMenu_filter_Click(object sender, EventArgs e) {
