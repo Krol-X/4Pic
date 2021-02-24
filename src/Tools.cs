@@ -25,8 +25,8 @@ namespace _4Pic
         public static byte FixPix(byte pix) {
             return Math.Max((byte)0, Math.Min((byte)255, pix));
         }
-        public static byte FixPix(double pix) {
-            return FixPix((byte)pix);
+        public static byte FixByte(double pix) {
+            return (byte)Math.Max(0, Math.Min(255, pix));
         }   
     }
 

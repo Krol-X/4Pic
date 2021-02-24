@@ -11,28 +11,39 @@ namespace _4Pic.src
 {
     public partial class BriConForm : Form
     {
-        private int HIST_COLW = 2;
-        private const int HIST_COLH = 100;
-        private Bitmap srcimage, _image;
-        public Bitmap image
+        private TBitmap srcimage, curimage;
+        public TBitmap image
         {
-            get { return _image; }
+            get { return curimage; }
             set {
-                ((MainForm)Owner).MainCanvas.Image = _image = value;
+                curimage = value;
+                ((MainForm)Owner).MainCanvas.Image = curimage.toBitmap();
             }
         }
 
-        public BriConForm(Form owner, Image image) {
+        private const int HIST_COLW = 2, HIST_COLH = 100;
+        private static Color BACK_COLOR = Color.Black;
+        private static SolidBrush HIST_BRUSH = new SolidBrush(Color.LightGray);
+        private static SolidBrush HIST_MAX_BRUSH = new SolidBrush(Color.Red);
+
+        private int brightness, contrast;
+        private Bitmap hist_image;
+        private Graphics hist_g;
+        protected int hmin_i, hmax_i;
+        protected double hmin, hmax;
+
+        #region BriConForm
+
+        public BriConForm(Form owner, TBitmap image) {
             InitializeComponent();
             this.Owner = owner;
-            this.srcimage = (Bitmap)image;
+            this.srcimage = image;
             track_change(track_bri.Value, track_con.Value);
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
             DialogResult = DialogResult.OK;
         }
-
         private void button_cancel_Click(object sender, EventArgs e) {
             DialogResult = DialogResult.Cancel;
         }
@@ -43,92 +54,55 @@ namespace _4Pic.src
         private void track_cont_Scroll(object sender, EventArgs e) {
             track_change(track_bri.Value, track_con.Value);
         }
+
+        #endregion
+
+        #region Do-BriCon
+
+        private void set_brightness(ref byte[] rgb, ref int[] yuv, int i) {
+            yuv[i + 0] = Tools.FixByte(yuv[i + 0] + brightness);
+        }
+
+        private void draw_hist(ref double[,] hist, ref double[,] d1, int i) {
+            int value = (int)((hist[3, i] - hmin) / hmax * HIST_COLH);
+            SolidBrush pen;
+            if (i == hmax_i) { pen = HIST_MAX_BRUSH; } else { pen = HIST_BRUSH; }
+            hist_g.FillRectangle(pen, i * HIST_COLW, HIST_COLH - value, HIST_COLW, value);
+        }
+
+        private void calc_hminmax(ref double[,] hist, ref double[,] d1, int i) {
+            if (hist[3, i] < hmin) { hmin_i = i; hmin = hist[3, i]; }
+            if (hist[3, i] > hmax) { hmax_i = i; hmax = hist[3, i]; }
+        }
+
         private void track_change(int bri, int con) {
             label_bri.Text = bri.ToString();
             label_con.Text = con.ToString();
-            var main = new BriCon(srcimage, bri, con);
-            image = main.Image; 
-            HistCanvas.Image = MakeHistImage(main, HistCanvas.Width);
+            brightness = bri;
+            contrast = con;
+
+            TBitmap im = new TBitmap(srcimage, true);
+            // Brightness
+            im.do_image(set_brightness);
+            im.update_rgb();
+
+            image = im;
+
+            // Histogram
+            hist_image = new Bitmap(HIST_COLW * 256, HIST_COLH);
+            hist_g = Graphics.FromImage(hist_image);
+            im.update_hist();
+
+            hmin_i = hmax_i = 0;
+            hmin = double.MaxValue; hmax = 0;
+            im.do_image(calc_hminmax);
+            hmax -= hmin;
+
+            hist_g.Clear(BACK_COLOR);
+            im.do_image(draw_hist);
+            HistCanvas.Image = hist_image;
         }
 
-        private Bitmap MakeHistImage(BriCon main, int width) {
-            var hist = main.Histogram;   
-            int min_i = main.Min_i, max_i = main.Max_i;
-            int w = 256 * HIST_COLW;
-            int ofs;
-            ofs = (width - w) >> 1;
-            Bitmap result = new Bitmap(width, HIST_COLH);
-            Graphics g = Graphics.FromImage(result);
-            g.Clear(Color.LightGray);
-            g.FillRectangle(new SolidBrush(Color.Black), ofs, 0, 256 * HIST_COLW, HIST_COLH);
-            SolidBrush usualPen = new SolidBrush(Color.DarkBlue);
-            SolidBrush minPen = new SolidBrush(Color.White);
-            SolidBrush maxPen = new SolidBrush(Color.Red);
-
-            double min = main.Min;
-            double max_0 = main.Max - min;
-            for (int i = 0; i < 256; i++) {
-                int value = (int)((hist[i] - min) / max_0 * HIST_COLH);
-                SolidBrush pen;
-                if (i == min_i) { pen = minPen; } else
-                if (i == max_i) { pen = maxPen; } else { pen = usualPen; }
-                g.FillRectangle(pen, ofs + i * HIST_COLW, HIST_COLH - value, HIST_COLW, value);
-            }
-            return result;
-        }
-
-        //private void BriConForm_MouseMove(object sender, MouseEventArgs e) {
-        //    Point xy = Cursor.Position;
-        //    Rectangle rect = new Rectangle(Left, Top, Width, Height);
-        //    Opacity = rect.IntersectsWith(new Rectangle(xy.X, xy.Y, 1, 1)) ? 100 : 50;
-        //    Console.WriteLine("{0}:{1} {2}:{3}", Left, Top, xy.X, xy.Y);
-        //}
-    }
-
-    public class BriCon
-    {
-        private const double K_R = 0.299;
-        private const double K_G = 0.587;
-        private const double K_B = 0.114;
-        public double[] Histogram;
-        public int Min_i, Max_i;
-        public double Min, Max;
-        public Bitmap Image;
-
-        private int Bri, Con;
-
-        void brightness(ref byte[] im, int i) {
-            im[i + 0] = Tools.FixPix(Bri + im[i + 0]);
-            im[i + 1] = Tools.FixPix(Bri + im[i + 1]);
-            im[i + 2] = Tools.FixPix(Bri + im[i + 2]);
-        }
-
-        void contrast(ref byte[] im, int i) {
-            //im[i + 0] = Con
-        }
-
-        void histgray(ref byte[] im, int i) {
-            byte hue = (byte)Math.Min(255, im[i + 0] * K_R + im[i + 1] * K_G + im[i + 2] * K_B);
-            Histogram[hue]++;
-        }
-
-        public BriCon(Bitmap srcimage, int bri, int con) {
-            Bri = bri; Con = con;
-
-            Image = Engine.do_pixel((Bitmap)srcimage.Clone(), brightness);
-
-            Histogram = new double[256];
-            Engine.do_pixel(Image, histgray);
-
-            double size = Image.Width * Image.Height;
-            Min_i = Max_i = 0;
-            Min = double.MaxValue;
-            Max = 0;
-            for (var i = 0; i < 256; i++) {
-                Histogram[i] = Histogram[i] / size;
-                if (Histogram[i] < Min) { Min_i = i; Min = Histogram[i]; }
-                if (Histogram[i] > Max) { Max_i = i; Max = Histogram[i]; }
-            }
-        }
+        #endregion
     }
 }

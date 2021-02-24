@@ -11,26 +11,30 @@ namespace _4Pic.src
 {
     public partial class BinForm : Form
     {
-        private Bitmap srcimage, _image;
-        public Bitmap image
+        private TBitmap srcimage, curimage;
+        public TBitmap image
         {
-            get { return _image; }
+            get { return curimage; }
             set {
-                ((MainForm)Owner).MainCanvas.Image = _image = value;
+                curimage = value;
+                ((MainForm)Owner).MainCanvas.Image = curimage.toBitmap();
             }
         }
 
-        public BinForm(Form owner, Image image) {
+        private int threshold;
+
+        #region BinForm
+
+        public BinForm(Form owner, TBitmap image) {
             InitializeComponent();
             this.Owner = owner;
-            this.srcimage = (Bitmap)image;
+            this.srcimage = image;
             track_change(track_thr.Value);
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
             DialogResult = DialogResult.OK;
         }
-
         private void button_cancel_Click(object sender, EventArgs e) {
             DialogResult = DialogResult.Cancel;
         }
@@ -39,32 +43,20 @@ namespace _4Pic.src
             track_change(track_thr.Value);
         }
 
+        #endregion
+
+        #region Do-binary
+
         private void track_change(int thr) {
             label_thr.Text = thr.ToString();
-            image = new Binary(srcimage, thr, false).Image;
+            threshold = thr;
+            image = new TBitmap(srcimage, true).do_image(to_binary);
+        }           
+
+        void to_binary(ref byte[] rgb, ref int[] yuv, int i) {
+            rgb[i + 0] = rgb[i + 1] = rgb[i + 2] = (byte)(yuv[i + 0] < threshold ? 255 : 0);
         }
 
-        public class Binary
-        {
-            public Bitmap Image;
-            private int Thr;
-
-            void binary(ref byte[] im, int i) {
-                var sum = (im[i + 0] + im[i + 1] + im[i + 2]) / 3;
-                im[i + 0] = im[i + 1] = im[i + 2] = (byte)(sum < Thr ? 255 : 0);
-            }
-
-            public Binary(Bitmap srcimage, int thr) {
-                Thr = thr;
-       
-                Image = Engine.do_pixel((Bitmap)srcimage.Clone(), binary);
-            }
-
-            public static int getByOtsu(Bitmap srcimage) {
-                int result = 0;
-                // TODO: codeit
-                return result;
-            }
-        }
+        #endregion
     }
 }

@@ -10,12 +10,15 @@ namespace _4Pic
     public partial class MainForm : Form
     {
         static string FILTER_WILDCARDS = "Поддерживаемые файлы|*.bmp;*.png;*.jpg;*.jpeg|Bitmap-файлы|*.bmp|PNG-файлы|*.png|JPEG-файлы|*.jpg;*.jpeg|Все файлы|*.*";
-        Image image;
+        TBitmap image = null;
+
+        #region MainForm
 
         public MainForm() {
             InitializeComponent();
             OpenDialog.Filter = SaveAsDialog.Filter = FILTER_WILDCARDS;
             FlowPanel.AutoScroll = true;
+            MainMenu_update();
         }
 
         private void MainForm_MouseWheel(object sender, MouseEventArgs e) {
@@ -40,6 +43,15 @@ namespace _4Pic
         }
 
 
+        void MainMenu_update() {
+            bool enabled = image != null;
+            MainMenu_SaveAs.Enabled = enabled;
+            MainMenu_Image.Enabled = enabled;
+            MainMenu_Script.Enabled = enabled;
+        }
+
+        #endregion
+
         #region MainMenu_File Handlers
 
         private void MainMenu_Open_Click(object sender, EventArgs e) {
@@ -58,12 +70,13 @@ namespace _4Pic
 
         private void OpenDialog_FileOk(object sender, CancelEventArgs e) {
             try {
-                var im = Image.FromFile(OpenDialog.FileName);
-                image = im;
-                MainCanvas.Image = image;
+                Image im = Image.FromFile(OpenDialog.FileName);
+                image = new TBitmap((Bitmap)im);
+                MainCanvas.Image = im;
             } catch {
                 MessageBox.Show("Невозможно открыть файл!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            MainMenu_update();
         }
 
         private void SaveAsDialog_FileOk(object sender, CancelEventArgs e) {
@@ -73,27 +86,28 @@ namespace _4Pic
 
         #endregion
 
-
         #region MainMenu_Image Handlers
 
-        private void negative(ref byte[] im, int i) {
-            im[i + 0] ^= 0xFF;
-            im[i + 1] ^= 0xFF;
-            im[i + 2] ^= 0xFF;
+        private void negative(ref byte[] rgb, ref int[] yuv, int i) {
+            rgb[i + 0] ^= 0xFF;
+            rgb[i + 1] ^= 0xFF;
+            rgb[i + 2] ^= 0xFF;
         }
         private void MainMenu_tonegative_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                MainCanvas.Image = Engine.do_pixel((Bitmap)image, negative);
+                image.do_image(negative);
+                MainCanvas.Image = image.toBitmap();
             }
         }
 
-        public void grayscale(ref byte[] im, int i) {
-            byte hue = (byte)Math.Min(255, im[i + 0] * 0.299 + im[i + 1] * 0.587 + im[i + 2] * 0.114);
-            im[i + 0] = im[i + 1] = im[i + 2] = hue;
+        public void grayscale(ref byte[] im, ref int[] yuv, int i) {
+            im[i + 0] = im[i + 1] = im[i + 2] = (byte)yuv[i + 0];
         }
         private void MainMenu_tograyscale_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                MainCanvas.Image =  Engine.do_pixel((Bitmap)image, grayscale);
+                image.update_yuv();
+                image.do_image(grayscale);
+                MainCanvas.Image = image.toBitmap();
             }
         }
 
@@ -102,16 +116,16 @@ namespace _4Pic
             if (form.ShowDialog() == DialogResult.OK) {
                 image = form.image;
             } else {
-                MainCanvas.Image = image;
+                MainCanvas.Image = image.toBitmap();
             }
         }
 
         private void MainMenu_bri_con_Click(object sender, EventArgs e) {
             BriConForm form = new BriConForm(this, image);
             if (form.ShowDialog() == DialogResult.OK) {
-                image = form.image; 
+                image = form.image;
             } else {
-                MainCanvas.Image = image;
+                MainCanvas.Image = image.toBitmap();
             }
         }
 
