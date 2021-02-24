@@ -13,15 +13,20 @@ namespace _4Pic.src
     {
         private int HIST_COLW = 2;
         private const int HIST_COLH = 100;
-
-        public Bitmap image { get; set; }
-        Bitmap srcimage;
+        private Bitmap srcimage, _image;
+        public Bitmap image
+        {
+            get { return _image; }
+            set {
+                ((MainForm)Owner).MainCanvas.Image = _image = value;
+            }
+        }
 
         public BriConForm(Form owner, Image image) {
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = (Bitmap)image;
-            track_change(0, 0);
+            track_change(track_bri.Value, track_con.Value);
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
@@ -42,13 +47,12 @@ namespace _4Pic.src
             label_bri.Text = bri.ToString();
             label_con.Text = con.ToString();
             var main = new BriCon(srcimage, bri, con);
-            image = main.Image;
-            ((MainForm)Owner).MainCanvas.Image = image;
+            image = main.Image; 
             HistCanvas.Image = MakeHistImage(main, HistCanvas.Width);
         }
 
         private Bitmap MakeHistImage(BriCon main, int width) {
-            var hist = main.Histogram;
+            var hist = main.Histogram;   
             int min_i = main.Min_i, max_i = main.Max_i;
             int w = 256 * HIST_COLW;
             int ofs;
@@ -61,8 +65,10 @@ namespace _4Pic.src
             SolidBrush minPen = new SolidBrush(Color.White);
             SolidBrush maxPen = new SolidBrush(Color.Red);
 
+            double min = main.Min;
+            double max_0 = main.Max - min;
             for (int i = 0; i < 256; i++) {
-                int value = (int)(hist[i] / main.Max * HIST_COLH);
+                int value = (int)((hist[i] - min) / max_0 * HIST_COLH);
                 SolidBrush pen;
                 if (i == min_i) { pen = minPen; } else
                 if (i == max_i) { pen = maxPen; } else { pen = usualPen; }
@@ -70,6 +76,13 @@ namespace _4Pic.src
             }
             return result;
         }
+
+        //private void BriConForm_MouseMove(object sender, MouseEventArgs e) {
+        //    Point xy = Cursor.Position;
+        //    Rectangle rect = new Rectangle(Left, Top, Width, Height);
+        //    Opacity = rect.IntersectsWith(new Rectangle(xy.X, xy.Y, 1, 1)) ? 100 : 50;
+        //    Console.WriteLine("{0}:{1} {2}:{3}", Left, Top, xy.X, xy.Y);
+        //}
     }
 
     public class BriCon
@@ -80,7 +93,7 @@ namespace _4Pic.src
         public double[] Histogram;
         public int Min_i, Max_i;
         public double Min, Max;
-        public Bitmap Image { get; set; }
+        public Bitmap Image;
 
         private int Bri, Con;
 
@@ -100,11 +113,9 @@ namespace _4Pic.src
         }
 
         public BriCon(Bitmap srcimage, int bri, int con) {
-            Image = (Bitmap)srcimage.Clone();
             Bri = bri; Con = con;
 
-            Engine.do_pixel(Image, brightness);
-
+            Image = Engine.do_pixel((Bitmap)srcimage.Clone(), brightness);
 
             Histogram = new double[256];
             Engine.do_pixel(Image, histgray);

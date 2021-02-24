@@ -70,6 +70,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\4lang.cs" />
+    <Compile Include="src\BinForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\BinForm.Designer.cs">
+      <DependentUpon>BinForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\BriContForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="src\BinForm.resx">
+      <DependentUpon>BinForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\BriContForm.resx">
       <DependentUpon>BriContForm.cs</DependentUpon>
     </EmbeddedResource>

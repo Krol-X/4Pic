@@ -97,21 +97,13 @@ namespace _4Pic
             }
         }
 
-        private void sepia(ref byte[] im, int i) {
-            int k = 8; // ?
-            var mid = (im[i + 0] + im[i + 1] + im[i + 2]) / 3;
-            im[i + 0] = Tools.FixPix(mid + k*2);
-            im[i + 1] = Tools.FixPix(mid + k);
-            im[i + 2] = Tools.FixPix(mid);
-        }
-        private void MainMenu_tosepia_Click(object sender, EventArgs e) {
-            if (MainCanvas.Image != null) {
-                MainCanvas.Image = Engine.do_pixel((Bitmap)image, sepia);
-            }
-        }
-
         private void MainMenu_tobinary_Click(object sender, EventArgs e) {
-
+            BinForm form = new BinForm(this, image);
+            if (form.ShowDialog() == DialogResult.OK) {
+                image = form.image;
+            } else {
+                MainCanvas.Image = image;
+            }
         }
 
         private void MainMenu_bri_con_Click(object sender, EventArgs e) {
