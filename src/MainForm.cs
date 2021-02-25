@@ -100,7 +100,7 @@ namespace _4Pic
         }
         private void MainMenu_tonegative_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                image.do_image(negative);
+                image.do_image(negative, true);
                 MainCanvas.Image = image.toBitmap();
             }
         }
@@ -111,7 +111,7 @@ namespace _4Pic
         private void MainMenu_tograyscale_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
                 image.update_yuv();
-                image.do_image(grayscale);
+                image.do_image(grayscale, true);
                 MainCanvas.Image = image.toBitmap();
             }
         }

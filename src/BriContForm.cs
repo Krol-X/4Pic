@@ -28,7 +28,7 @@ namespace _4Pic.src
         protected int hmin_i, hmax_i;
         protected double hmin, hmax;
 
-        #region BriConForm
+
 
         public BriConForm(Form owner, TBitmap image) {
             InitializeComponent();
@@ -51,33 +51,7 @@ namespace _4Pic.src
             track_change(track_bri.Value, track_con.Value);
         }
 
-        #endregion
 
-        #region Do-BriCon
-
-        private void set_brightness(ref byte[] rgb, ref int[] yuv, int i) {
-            yuv[i + 0] = Tools.FixByte(yuv[i + 0] + brightness);
-        }
-
-        private void set_contrast(ref byte[] rgb, ref int[] yuv, int i) {
-            rgb[i + 0] = Tools.FixByte(contrast * (rgb[i + 0] - 128) + 128);
-            rgb[i + 1] = Tools.FixByte(contrast * (rgb[i + 1] - 128) + 128);
-            rgb[i + 2] = Tools.FixByte(contrast * (rgb[i + 2] - 128) + 128);
-        }
-
-        private void calc_hminmax(ref double[,] hist, ref double[,] d1, int i) {
-            if (hist[3, i] < hmin) { hmin_i = i; hmin = hist[3, i]; }
-            if (hist[3, i] > hmax) { hmax_i = i; hmax = hist[3, i]; }
-        }
-
-        private void draw_hist(ref double[,] hist, ref double[,] d1, int i) {
-            int value = (int)((hist[3, i] - hmin) / hmax * HIST_COLH);
-            SolidBrush pen;
-            if (i == hmax_i) { pen = HIST_MAX_BRUSH; } else { pen = HIST_BRUSH; }
-            hist_g.FillRectangle(pen, i * HIST_COLW, HIST_COLH - value, HIST_COLW, value);
-        }
-
-        
 
         private void track_change(int bri, int con) {
             label_bri.Text = bri.ToString();
@@ -87,12 +61,12 @@ namespace _4Pic.src
             TBitmap im = new TBitmap(srcimage, true);
             
             // Brightness
-            im.do_image(set_brightness);
+            im.do_image(set_brightness, true);
             im.update_rgb();
 
             // Contrast
             contrast = 259.0 * (con + 255.0) / (255.0 * (259.0 - con));
-            im.do_image(set_contrast);
+            im.do_image(set_contrast, true);
             im.update_yuv();
 
             image = im;
@@ -111,7 +85,5 @@ namespace _4Pic.src
             im.do_image(draw_hist);
             HistCanvas.Image = hist_image;
         }
-
-        #endregion
     }
 }

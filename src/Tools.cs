@@ -49,4 +49,10 @@ namespace _4Pic
             return this.ElementAt<T>(Count);
         }
     }
+
+    public struct MinMax<T>
+    {
+        public T min, max;
+        public int min_i, max_i;
+    }
 }
