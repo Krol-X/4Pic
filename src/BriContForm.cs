@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace _4Pic.src
@@ -26,7 +21,8 @@ namespace _4Pic.src
         private static SolidBrush HIST_BRUSH = new SolidBrush(Color.LightGray);
         private static SolidBrush HIST_MAX_BRUSH = new SolidBrush(Color.Red);
 
-        private int brightness, contrast;
+        private int brightness;
+        private double contrast;
         private Bitmap hist_image;
         private Graphics hist_g;
         protected int hmin_i, hmax_i;
@@ -63,11 +59,10 @@ namespace _4Pic.src
             yuv[i + 0] = Tools.FixByte(yuv[i + 0] + brightness);
         }
 
-        private void draw_hist(ref double[,] hist, ref double[,] d1, int i) {
-            int value = (int)((hist[3, i] - hmin) / hmax * HIST_COLH);
-            SolidBrush pen;
-            if (i == hmax_i) { pen = HIST_MAX_BRUSH; } else { pen = HIST_BRUSH; }
-            hist_g.FillRectangle(pen, i * HIST_COLW, HIST_COLH - value, HIST_COLW, value);
+        private void set_contrast(ref byte[] rgb, ref int[] yuv, int i) {
+            rgb[i + 0] = Tools.FixByte(contrast * (rgb[i + 0] - 128) + 128);
+            rgb[i + 1] = Tools.FixByte(contrast * (rgb[i + 1] - 128) + 128);
+            rgb[i + 2] = Tools.FixByte(contrast * (rgb[i + 2] - 128) + 128);
         }
 
         private void calc_hminmax(ref double[,] hist, ref double[,] d1, int i) {
@@ -75,16 +70,30 @@ namespace _4Pic.src
             if (hist[3, i] > hmax) { hmax_i = i; hmax = hist[3, i]; }
         }
 
+        private void draw_hist(ref double[,] hist, ref double[,] d1, int i) {
+            int value = (int)((hist[3, i] - hmin) / hmax * HIST_COLH);
+            SolidBrush pen;
+            if (i == hmax_i) { pen = HIST_MAX_BRUSH; } else { pen = HIST_BRUSH; }
+            hist_g.FillRectangle(pen, i * HIST_COLW, HIST_COLH - value, HIST_COLW, value);
+        }
+
+        
+
         private void track_change(int bri, int con) {
             label_bri.Text = bri.ToString();
             label_con.Text = con.ToString();
             brightness = bri;
-            contrast = con;
 
             TBitmap im = new TBitmap(srcimage, true);
+            
             // Brightness
             im.do_image(set_brightness);
             im.update_rgb();
+
+            // Contrast
+            contrast = 259.0 * (con + 255.0) / (255.0 * (259.0 - con));
+            im.do_image(set_contrast);
+            im.update_yuv();
 
             image = im;
 

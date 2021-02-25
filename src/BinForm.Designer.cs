@@ -30,6 +30,7 @@
             this.track_thr = new System.Windows.Forms.TrackBar();
             this.button_cancel = new System.Windows.Forms.Button();
             this.button_ok = new System.Windows.Forms.Button();
+            this.checkbox_adaptive = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.track_thr)).BeginInit();
             this.SuspendLayout();
             // 
@@ -67,7 +68,7 @@
             // button_cancel
             // 
             this.button_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_cancel.Location = new System.Drawing.Point(242, 63);
+            this.button_cancel.Location = new System.Drawing.Point(242, 75);
             this.button_cancel.Name = "button_cancel";
             this.button_cancel.Size = new System.Drawing.Size(200, 23);
             this.button_cancel.TabIndex = 13;
@@ -78,7 +79,7 @@
             // button_ok
             // 
             this.button_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button_ok.Location = new System.Drawing.Point(12, 63);
+            this.button_ok.Location = new System.Drawing.Point(12, 75);
             this.button_ok.Name = "button_ok";
             this.button_ok.Size = new System.Drawing.Size(200, 23);
             this.button_ok.TabIndex = 12;
@@ -86,13 +87,24 @@
             this.button_ok.UseVisualStyleBackColor = true;
             this.button_ok.Click += new System.EventHandler(this.button_ok_Click);
             // 
+            // checkbox_adaptive
+            // 
+            this.checkbox_adaptive.AutoSize = true;
+            this.checkbox_adaptive.Location = new System.Drawing.Point(356, 52);
+            this.checkbox_adaptive.Name = "checkbox_adaptive";
+            this.checkbox_adaptive.Size = new System.Drawing.Size(86, 17);
+            this.checkbox_adaptive.TabIndex = 14;
+            this.checkbox_adaptive.Text = "Адаптивная";
+            this.checkbox_adaptive.UseVisualStyleBackColor = true;
+            // 
             // BinForm
             // 
             this.AcceptButton = this.button_ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_cancel;
-            this.ClientSize = new System.Drawing.Size(454, 98);
+            this.ClientSize = new System.Drawing.Size(454, 106);
+            this.Controls.Add(this.checkbox_adaptive);
             this.Controls.Add(this.button_cancel);
             this.Controls.Add(this.button_ok);
             this.Controls.Add(this.label_thr);
@@ -116,5 +128,6 @@
         private System.Windows.Forms.TrackBar track_thr;
         private System.Windows.Forms.Button button_cancel;
         private System.Windows.Forms.Button button_ok;
+        private System.Windows.Forms.CheckBox checkbox_adaptive;
     }
 }

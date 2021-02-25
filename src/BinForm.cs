@@ -22,6 +22,7 @@ namespace _4Pic.src
         }
 
         private int threshold;
+        private bool adaptive;
 
         #region BinForm
 
@@ -29,7 +30,7 @@ namespace _4Pic.src
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;
-            track_change(track_thr.Value);
+            track_change(track_thr.Value, checkbox_adaptive.Checked);
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
@@ -40,18 +41,25 @@ namespace _4Pic.src
         }
 
         private void track_thr_Scroll(object sender, EventArgs e) {
-            track_change(track_thr.Value);
+            track_change(track_thr.Value, checkbox_adaptive.Checked);
         }
 
         #endregion
 
         #region Do-binary
 
-        private void track_change(int thr) {
+        private void track_change(int thr, bool adap) {
             label_thr.Text = thr.ToString();
             threshold = thr;
-            image = new TBitmap(srcimage, true).do_image(to_binary);
-        }           
+            adaptive = adap;
+
+            TBitmap im = new TBitmap(srcimage, true);
+            if (adaptive) {
+                // TODO: codeit
+            } else {
+                image = im.do_image(to_binary);
+            }
+        }            
 
         void to_binary(ref byte[] rgb, ref int[] yuv, int i) {
             rgb[i + 0] = rgb[i + 1] = rgb[i + 2] = (byte)(yuv[i + 0] < threshold ? 255 : 0);

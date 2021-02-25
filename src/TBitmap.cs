@@ -25,6 +25,8 @@ namespace _4Pic.src
         protected int width, height;
         protected int count;
         protected const int pixel_size = 4;
+        protected int mid_y;
+        public int middle_y { get { return mid_y; } }
 
         #region TBitmap
 
@@ -51,7 +53,7 @@ namespace _4Pic.src
             image = (byte[])src.image.Clone();
             yuv = new int[count];
             hist = new double[4, 256];
-            //hist_d1 = new double[4, 256];
+            hist_d1 = new double[4, 256];
             if (upd_yuv) update_yuv();
             if (upd_hist) update_hist();
         }
@@ -71,10 +73,12 @@ namespace _4Pic.src
         #region Update YUV
 
         public void update_yuv() {
+            mid_y = 0;
             do_image(calc_yuv);
+            mid_y /= count;
         }
 
-        private static void calc_yuv(ref byte[] rgb, ref int[] yuv, int i) {
+        private void calc_yuv(ref byte[] rgb, ref int[] yuv, int i) {
             double r = rgb[i + 0], g = rgb[i + 1], b = rgb[i + 2];
             if (BRI_WIKI) {
                 double y = Kr * r + Kg * g + Kb * b;
@@ -86,6 +90,7 @@ namespace _4Pic.src
                 yuv[i + 1] = (int)(-0.147 * r - 0.289 * g + 0.436 * b);
                 yuv[i + 2] = (int)(0.615 * r - 0.515 * g - 0.100 * b);
             }
+            mid_y += yuv[i + 0];
         }
 
         #endregion
@@ -134,18 +139,10 @@ namespace _4Pic.src
             }
         }
 
-        private void calc_hist(ref double[,] hist, ref double[,] d1, int i) {
-            //src[0, i] /= (double)count;
-            //src[1, i] /= (double)count;
-            //src[2, i] /= (double)count;
-            hist[3, i] /= (double)count;
-        }
-
         public void update_hist() {
             do_image(calc_hist_y);
             //do_image(hnd_calc_hist_rgb);
-            do_image(calc_hist);
-            //do_hist(false, calc_hist_d1);
+            do_image(calc_hist_d1);
         }
 
         #endregion

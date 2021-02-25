@@ -83,6 +83,12 @@
       <DependentUpon>BriContForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Engine.cs" />
+    <Compile Include="src\FilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\FilterForm.Designer.cs">
+      <DependentUpon>FilterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Interpreter.cs" />
     <Compile Include="src\MainForm.cs">
       <SubType>Form</SubType>
@@ -109,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\BriContForm.resx">
       <DependentUpon>BriContForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\FilterForm.resx">
+      <DependentUpon>FilterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -137,6 +146,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\open.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\save.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

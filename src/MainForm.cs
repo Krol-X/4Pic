@@ -47,6 +47,11 @@ namespace _4Pic
             bool enabled = image != null;
             MainMenu_SaveAs.Enabled = enabled;
             MainMenu_Image.Enabled = enabled;
+            MainMenu_tonegative.Enabled = enabled;
+            MainMenu_tograyscale.Enabled = enabled;
+            MainMenu_tobinary.Enabled = enabled;
+            MainMenu_bri_con.Enabled = enabled;
+            MainMenu_filter.Enabled = enabled;
             MainMenu_Script.Enabled = enabled;
         }
 
@@ -130,7 +135,12 @@ namespace _4Pic
         }
 
         private void MainMenu_filter_Click(object sender, EventArgs e) {
-
+            FilterForm form = new FilterForm(this, image);
+            if (form.ShowDialog() == DialogResult.OK) {
+                image = form.image;
+            } else {
+                MainCanvas.Image = image.toBitmap();
+            }
         }
 
         #endregion
