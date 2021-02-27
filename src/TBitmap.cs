@@ -10,11 +10,10 @@ namespace _4Pic.src
 {
     public class TBitmap
     {
-        static bool USE_PFOREACH = false;
         const int PARTS_N = 8;
 
         public delegate void do_hnd(TBitmap image, int i);
-        public delegate void do_hndp<T>(TBitmap image, int i, T param);
+        public delegate void do_hnd<T>(TBitmap image, int i, T param);
         public delegate IEnumerable<int> do_iter(TBitmap im);
 
         public readonly static int R = 0, G = 1, B = 2, H = 3;
@@ -61,84 +60,44 @@ namespace _4Pic.src
         }
 
         public TBitmap do_image(do_hnd f, do_iter iter, bool use_parallel = false) {
+            var it = iter(this);
+
             if (use_parallel) {
                 if (iter == imIter && size > PARTS_N) {
                     int m = size / PARTS_N, n = size % PARTS_N;
                     for (int j = 0; j < PARTS_N; j++) {
                         int k = j * m;
-                        var it = Tools.Range(0, m);
-                        if (USE_PFOREACH) {
-                            Parallel.ForEach(it, (x, _, i) => {
-                                f(this, (int)(k + i));
-                            });
-                        } else {
-                            it.AsParallel().ForAll(i => {
-                                f(this, k + i);
-                            });
-                        }
+                        it = Tools.Range(0, m);
+
+                        it.AsParallel().ForAll(i => {
+                            f(this, k + i);
+                        });
                     }
                     if (n != 0) {
                         int k = PARTS_N * m;
-                        var it = Tools.Range(0, n);
-                        if (USE_PFOREACH) {
-                            Parallel.ForEach(it, (x, _, i) => {
-                                f(this, (int)(k + i));
-                            });
-                        } else {
-                            it.AsParallel().ForAll(i => {
-                                f(this, k + i);
-                            });
-                        }
+                        it = Tools.Range(0, n);
+
+                        it.AsParallel().ForAll(i => {
+                            f(this, k + i);
+                        });
                     }
                 } else {
-                    var it = iter(this);
-                    if (USE_PFOREACH) {
-                        Parallel.ForEach(it, (x, _, i) => {
-                            f(this, (int)i);
-                        });
-                    } else {
-                        it.AsParallel().ForAll(i => {
-                            f(this, i);
-                        });
-                    }
+                    it.AsParallel().ForAll(i => {
+                        f(this, i);
+                    });
                 }
             } else {
-                foreach (int i in iter(this)) {
+                foreach (int i in it) {
                     f(this, i);
                 }
             }
             return this;
         }
 
-        public TBitmap do_image<T>(do_hndp<T> f, do_iter iter, T p, bool use_parallel = false) {
-            use_parallel = false;
+        public TBitmap do_image<T>(do_hnd<T> f, do_iter iter, T p, bool use_parallel = false) {
             var it = iter(this);
-            if (use_parallel) {
-                if (iter == imIter && size > PARTS_N) {
-                    int m = size / PARTS_N, n = size % PARTS_N;
-                    for (int j = 0; j < PARTS_N; j++) {
-                        int k = j * m;
-                        Parallel.ForEach(Tools.Range(0, m), (x, _, i) => {
-                            f(this, (int)(k + i), p);
-                        });
-                    }
-                    if (n != 0) {
-                        int k = PARTS_N * m;
-                        Parallel.ForEach(Tools.Range(0, m), (x, _, i) => {
-                            f(this, (int)(k + i), p);
-                        });
-                    }
-                } else {
-                    Parallel.ForEach(iter(this), (x, _, i) => {
-                        f(this, (int)i, p);
-                    });
-                }
-            } else {
-                foreach (int i in it) {
-                    f(this, i, p);
-                }
-            }
-            return this;
+            do_hnd ff = (im, i) => { f(im, i, p); };
+            return do_image(ff, iter, use_parallel);
         }
 
         public static IEnumerable<int> imIter(TBitmap im) {
