@@ -3,9 +3,11 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 using System.ComponentModel;
+
 using _4Pic.src;
 using static _4Pic.src.DoHnd;
 using static _4Pic.src.TBitmap;
+
 
 namespace _4Pic
 {
@@ -135,6 +137,12 @@ namespace _4Pic
             } else {
                 MainCanvas.Image = image.toBitmap();
             }
+        }
+
+        private void MainMenu_figures_Click(object sender, EventArgs e) {
+            var new_im = DoCV.RecognizeFigures(image.toBitmap());
+            image = new TBitmap(new_im);
+            MainCanvas.Image = new_im;
         }
 
         #endregion

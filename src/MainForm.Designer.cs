@@ -43,6 +43,8 @@
             this.OpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveAsDialog = new System.Windows.Forms.SaveFileDialog();
             this.FlowPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.MainMenu_figures = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainCanvas)).BeginInit();
             this.FlowPanel.SuspendLayout();
@@ -101,7 +103,9 @@
             this.MainMenu_tobinary,
             this.MainMenu_sep1,
             this.MainMenu_bri_con,
-            this.MainMenu_filter});
+            this.MainMenu_filter,
+            this.toolStripSeparator1,
+            this.MainMenu_figures});
             this.MainMenu_Image.Name = "MainMenu_Image";
             this.MainMenu_Image.Size = new System.Drawing.Size(95, 20);
             this.MainMenu_Image.Text = "Изображение";
@@ -193,6 +197,19 @@
             this.FlowPanel.Size = new System.Drawing.Size(560, 347);
             this.FlowPanel.TabIndex = 2;
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(248, 6);
+            // 
+            // MainMenu_figures
+            // 
+            this.MainMenu_figures.Name = "MainMenu_figures";
+            this.MainMenu_figures.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.MainMenu_figures.Size = new System.Drawing.Size(251, 22);
+            this.MainMenu_figures.Text = "Распознать фигуры";
+            this.MainMenu_figures.Click += new System.EventHandler(this.MainMenu_figures_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -235,6 +252,8 @@
         private System.Windows.Forms.ToolStripSeparator MainMenu_sep1;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_bri_con;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_filter;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_figures;
     }
 }
 
