@@ -6,15 +6,17 @@ namespace _4Pic.src
 {
     public static class DoHnd
     {
-        #region TBitmap handlers
+        static bool BRI_WIKI = false;
 
+        const int MID_GRAY = 159;
         public const double Kr = 0.299, Kb = 0.114;
         public const double Kg = 1 - Kr - Kb;
-        static bool BRI_WIKI = false;
+
+        #region TBitmap handlers
 
         // parallel = true
         public static void rgb_fromyuv(TBitmap im, int i) {
-            var rgb = im.rgb; var yuv = im.yuv;
+            var rgb = im.rgb; var yuv = im.yuv; i <<= 2;
             double y = yuv[i + 0], u = yuv[i + 1], v = yuv[i + 2];
             if (BRI_WIKI) {
                 rgb[i + 0] = Tools.FixByte(y + v);
@@ -29,7 +31,7 @@ namespace _4Pic.src
 
         // parallel = true
         public static void yuv_fromrgb(TBitmap im, int i) {
-            var rgb = im.rgb; var yuv = im.yuv;
+            var rgb = im.rgb; var yuv = im.yuv; i <<= 2;
             double r = rgb[i + 0], g = rgb[i + 1], b = rgb[i + 2];
             if (BRI_WIKI) {
                 double y = Kr * r + Kg * g + Kb * b;
@@ -51,7 +53,7 @@ namespace _4Pic.src
 
         // parallel = true
         public static void hist_rgb(TBitmap im, int i) {
-            var rgb = im.rgb; var hist = im.hist;
+            var rgb = im.rgb; var hist = im.hist; i <<= 2;
             hist[rgb[i + 0], R]++;
             hist[rgb[i + 1], G]++;
             hist[rgb[i + 2], B]++;
@@ -59,7 +61,7 @@ namespace _4Pic.src
 
         // parallel = true
         public static void hist_hue(TBitmap im, int i) {
-            var yuv = im.yuv; var hist = im.hist;
+            var yuv = im.yuv; var hist = im.hist; i <<= 2;
             hist[yuv[i + 0], H]++;
         }
 
@@ -69,7 +71,7 @@ namespace _4Pic.src
 
         // parallel = true
         public static void negative(TBitmap im, int i) {
-            var rgb = im.rgb;
+            var rgb = im.rgb; i <<= 2;
             rgb[i + 0] ^= 0xFF;
             rgb[i + 1] ^= 0xFF;
             rgb[i + 2] ^= 0xFF;
@@ -77,7 +79,7 @@ namespace _4Pic.src
 
         // parallel = true
         public static void grayscale(TBitmap im, int i) {
-            var rgb = im.rgb; var yuv = im.yuv;
+            var rgb = im.rgb; var yuv = im.yuv; i <<= 2;
             rgb[i + 0] = rgb[i + 1] = rgb[i + 2] = (byte)yuv[i + 0];
         }
 
@@ -87,7 +89,7 @@ namespace _4Pic.src
 
         // parallel = true
         public static void binary(TBitmap im, int i, object thr) {
-            var rgb = im.rgb; var yuv = im.yuv;
+            var rgb = im.rgb; var yuv = im.yuv; i <<= 2;
             rgb[i + 0] = rgb[i + 1] = rgb[i + 2] =
                 (byte)((yuv[i + 0] < (int)thr) ? 255 : 0);
         }
@@ -98,23 +100,27 @@ namespace _4Pic.src
 
         // parallel = true
         public static void brightness(TBitmap im, int i, object bri) {
-            var yuv = im.yuv;
+            var yuv = im.yuv; i <<= 2;
             yuv[i + 0] = Tools.FixByte(yuv[i + 0] + (int)bri);
         }
 
         // parallel = true
         public static void contrast(TBitmap im, int i, object con) {
-            var rgb = im.rgb; var x = (int)con;
-            rgb[i + 0] = Tools.FixByte(x * (rgb[i + 0] - 128) + 128);
-            rgb[i + 1] = Tools.FixByte(x * (rgb[i + 1] - 128) + 128);
-            rgb[i + 2] = Tools.FixByte(x * (rgb[i + 2] - 128) + 128);
+            var rgb = im.rgb; var x = (double)con; i <<= 2;
+            rgb[i + 0] = Tools.FixByte(x * (rgb[i + 0] - MID_GRAY) + MID_GRAY);
+            rgb[i + 1] = Tools.FixByte(x * (rgb[i + 1] - MID_GRAY) + MID_GRAY);
+            rgb[i + 2] = Tools.FixByte(x * (rgb[i + 2] - MID_GRAY) + MID_GRAY);
         }
 
         // parallel = false
         public static void hist_minmax(TBitmap im, int i, object p) {
             var hist = im.hist; var mm = (MinMax<double>)p;
-            if (hist[i, H] < mm.min) { mm.min_i = i; mm.min = hist[i, H]; }
-            if (hist[i, H] > mm.max) { mm.max_i = i; mm.max = hist[i, H]; }
+            if (hist[i, H] < mm.min) {
+                mm.min_i = i; mm.min = hist[i, H];
+            }
+            if (hist[i, H] > mm.max) {
+                mm.max_i = i; mm.max = hist[i, H];
+            }
         }
 
         public struct TDrawSpec

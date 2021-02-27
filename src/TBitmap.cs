@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -8,6 +10,9 @@ namespace _4Pic.src
 {
     public class TBitmap
     {
+        static bool USE_PFOREACH = false;
+        const int PARTS_N = 8;
+
         public delegate void do_hnd(TBitmap image, int i);
         public delegate void do_hndp(TBitmap image, int i, object param);
         public delegate IEnumerable<int> do_iter(TBitmap im);
@@ -56,13 +61,49 @@ namespace _4Pic.src
         }
 
         public TBitmap do_image(do_hnd f, do_iter iter, bool use_parallel = false) {
-            var it = iter(this);
             if (use_parallel) {
-                Parallel.ForEach(it, (x, _, i) => {
-                    f(this, (int)i);
-                });
+                if (iter == imIter && size > PARTS_N) {
+                    int m = size / PARTS_N, n = size % PARTS_N;
+                    for (int j = 0; j < PARTS_N; j++) {
+                        int k = j * m;
+                        var it = Tools.Range(0, m);
+                        if (USE_PFOREACH) {
+                            Parallel.ForEach(it, (x, _, i) => {
+                                f(this, (int)(k + i));
+                            });
+                        } else {
+                            it.AsParallel().ForAll(i => {
+                                f(this, k + i);
+                            });
+                        }
+                    }
+                    if (n != 0) {
+                        int k = PARTS_N * m;
+                        var it = Tools.Range(0, n);
+                        if (USE_PFOREACH) {
+                            Parallel.ForEach(it, (x, _, i) => {
+                                f(this, (int)(k + i));
+                            });
+                        } else {
+                            it.AsParallel().ForAll(i => {
+                                f(this, k + i);
+                            });
+                        }
+                    }
+                } else {
+                    var it = iter(this);
+                    if (USE_PFOREACH) {
+                        Parallel.ForEach(it, (x, _, i) => {
+                            f(this, (int)i);
+                        });
+                    } else {
+                        it.AsParallel().ForAll(i => {
+                            f(this, i);
+                        });
+                    }
+                }
             } else {
-                foreach (int i in it) {
+                foreach (int i in iter(this)) {
                     f(this, i);
                 }
             }
@@ -73,9 +114,25 @@ namespace _4Pic.src
             use_parallel = false;
             var it = iter(this);
             if (use_parallel) {
-                Parallel.ForEach(it, (x, _, i) => {
-                    f(this, (int)i, p);
-                });
+                if (iter == imIter && size > PARTS_N) {
+                    int m = size / PARTS_N, n = size % PARTS_N;
+                    for (int j = 0; j < PARTS_N; j++) {
+                        int k = j * m;
+                        Parallel.ForEach(Tools.Range(0, m), (x, _, i) => {
+                            f(this, (int)(k + i), p);
+                        });
+                    }
+                    if (n != 0) {
+                        int k = PARTS_N * m;
+                        Parallel.ForEach(Tools.Range(0, m), (x, _, i) => {
+                            f(this, (int)(k + i), p);
+                        });
+                    }
+                } else {
+                    Parallel.ForEach(iter(this), (x, _, i) => {
+                        f(this, (int)i, p);
+                    });
+                }
             } else {
                 foreach (int i in it) {
                     f(this, i, p);
@@ -85,7 +142,7 @@ namespace _4Pic.src
         }
 
         public static IEnumerable<int> imIter(TBitmap im) {
-            return Tools.Range(0, im.count, pixel_size);
+            return Tools.Range(0, im.size);
         }
 
         public static IEnumerable<int> hIter(TBitmap im) {

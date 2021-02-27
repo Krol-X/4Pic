@@ -50,21 +50,25 @@ namespace _4Pic.src
             label_bri.Text = bri.ToString();
             label_con.Text = con.ToString();
 
-            TBitmap im = srcimage.clone();
+            TBitmap im = srcimage
+                .clone()
+                .do_image(yuv_fromrgb, imIter, true);
 
             // Brightness
             im.do_image(brightness, imIter, bri, true)
                 .do_image(rgb_fromyuv, imIter, true);
 
             // Contrast
-            con = (int)(259.0 * (con + 255.0) / (255.0 * (259.0 - con)));
-            im.do_image(contrast, imIter, con, true)
+            var c = 259.0 * (con + 255.0) / (255.0 * (259.0 - con));
+            im.do_image(contrast, imIter, c, true)
                 .do_image(yuv_fromrgb, imIter, true);
 
             image = im;
 
             // Histogram
-            MinMax<double> mm = new MinMax<double>();
+            MinMax<double> mm = new MinMax<double>() {
+                min = double.MaxValue
+            };
 
             im.do_image(hist_clear, hIter, true)
                 .do_image(hist_hue, imIter, true)

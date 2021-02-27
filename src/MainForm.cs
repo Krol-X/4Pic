@@ -97,7 +97,7 @@ namespace _4Pic
 
         private void MainMenu_tonegative_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                MainCanvas.Image = image.do_image(negative, imIter).toBitmap();
+                MainCanvas.Image = image.do_image(negative, imIter, true).toBitmap();
             }
         }
 

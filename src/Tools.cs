@@ -52,7 +52,7 @@ namespace _4Pic
         }
     }
 
-    public struct MinMax<T>
+    public class MinMax<T>
     {
         public T min, max;
         public int min_i, max_i;
