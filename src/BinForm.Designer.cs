@@ -25,24 +25,15 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.label_thr = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.track_thr = new System.Windows.Forms.TrackBar();
             this.button_cancel = new System.Windows.Forms.Button();
             this.button_ok = new System.Windows.Forms.Button();
             this.checkbox_adaptive = new System.Windows.Forms.CheckBox();
+            this.ud_bin = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.track_thr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_bin)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label_thr
-            // 
-            this.label_thr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label_thr.Location = new System.Drawing.Point(56, 23);
-            this.label_thr.Name = "label_thr";
-            this.label_thr.Size = new System.Drawing.Size(30, 13);
-            this.label_thr.TabIndex = 11;
-            this.label_thr.Text = "0";
-            this.label_thr.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label1
             // 
@@ -56,10 +47,10 @@
             // track_thr
             // 
             this.track_thr.LargeChange = 4;
-            this.track_thr.Location = new System.Drawing.Point(89, 12);
+            this.track_thr.Location = new System.Drawing.Point(105, 12);
             this.track_thr.Maximum = 255;
             this.track_thr.Name = "track_thr";
-            this.track_thr.Size = new System.Drawing.Size(365, 45);
+            this.track_thr.Size = new System.Drawing.Size(349, 45);
             this.track_thr.TabIndex = 9;
             this.track_thr.TickFrequency = 8;
             this.track_thr.Value = 128;
@@ -97,6 +88,19 @@
             this.checkbox_adaptive.Text = "Адаптивная";
             this.checkbox_adaptive.UseVisualStyleBackColor = true;
             // 
+            // ud_bin
+            // 
+            this.ud_bin.Location = new System.Drawing.Point(56, 20);
+            this.ud_bin.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.ud_bin.Name = "ud_bin";
+            this.ud_bin.Size = new System.Drawing.Size(43, 20);
+            this.ud_bin.TabIndex = 15;
+            this.ud_bin.ValueChanged += new System.EventHandler(this.ud_bin_ValueChanged);
+            // 
             // BinForm
             // 
             this.AcceptButton = this.button_ok;
@@ -104,10 +108,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_cancel;
             this.ClientSize = new System.Drawing.Size(454, 106);
+            this.Controls.Add(this.ud_bin);
             this.Controls.Add(this.checkbox_adaptive);
             this.Controls.Add(this.button_cancel);
             this.Controls.Add(this.button_ok);
-            this.Controls.Add(this.label_thr);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.track_thr);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -116,18 +120,18 @@
             this.Text = "Бинаризация";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.track_thr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_bin)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label_thr;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar track_thr;
         private System.Windows.Forms.Button button_cancel;
         private System.Windows.Forms.Button button_ok;
         private System.Windows.Forms.CheckBox checkbox_adaptive;
+        private System.Windows.Forms.NumericUpDown ud_bin;
     }
 }

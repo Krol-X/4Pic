@@ -83,7 +83,6 @@
       <DependentUpon>BriContForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\DoHnd.cs" />
-    <Compile Include="src\Engine.cs" />
     <Compile Include="src\FilterForm.cs">
       <SubType>Form</SubType>
     </Compile>

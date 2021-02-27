@@ -23,7 +23,7 @@ namespace _4Pic.src
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;
-            track_change(track_thr.Value, checkbox_adaptive.Checked);
+            change(track_thr.Value, checkbox_adaptive.Checked);
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
@@ -34,13 +34,15 @@ namespace _4Pic.src
         }
 
         private void track_thr_Scroll(object sender, EventArgs e) {
-            track_change(track_thr.Value, checkbox_adaptive.Checked);
+            change(track_thr.Value, checkbox_adaptive.Checked);
         }
 
+        private void ud_bin_ValueChanged(object sender, EventArgs e) {
+            change((int)ud_bin.Value, checkbox_adaptive.Checked);
+        }
 
-
-        private void track_change(int threshold, bool adaptive) {
-            label_thr.Text = threshold.ToString();
+        private void change(int threshold, bool adaptive) {
+            ud_bin.Value = track_thr.Value = threshold;
 
             var im = srcimage.clone();
             if (adaptive) {

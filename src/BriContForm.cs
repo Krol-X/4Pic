@@ -27,7 +27,7 @@ namespace _4Pic.src
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;
-            track_change(track_bri.Value, track_con.Value);
+            on_change(track_bri.Value, track_con.Value);
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
@@ -38,17 +38,23 @@ namespace _4Pic.src
         }
 
         private void track_bri_Scroll(object sender, EventArgs e) {
-            track_change(track_bri.Value, track_con.Value);
+            on_change(track_bri.Value, track_con.Value);
         }
         private void track_cont_Scroll(object sender, EventArgs e) {
-            track_change(track_bri.Value, track_con.Value);
+            on_change(track_bri.Value, track_con.Value);
         }
 
+        private void ud_bri_ValueChanged(object sender, EventArgs e) {
+            on_change((int)ud_bri.Value, (int)ud_con.Value);
+        }
 
+        private void ud_con_ValueChanged(object sender, EventArgs e) {
+            on_change((int)ud_bri.Value, (int)ud_con.Value);
+        }
 
-        private void track_change(int bri, int con) {
-            label_bri.Text = bri.ToString();
-            label_con.Text = con.ToString();
+        private void on_change(int bri, int con) {
+            ud_bri.Value = track_bri.Value = bri;
+            ud_con.Value = track_con.Value = con;
 
             TBitmap im = srcimage
                 .clone()

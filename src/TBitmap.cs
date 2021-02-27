@@ -65,7 +65,9 @@ namespace _4Pic.src
             if (use_parallel) {
                 if (iter == imIter && size > PARTS_N) {
                     int m = size / PARTS_N, n = size % PARTS_N;
-                    for (int j = 0; j < PARTS_N; j++) {
+                    Tools.Range(0, PARTS_N).AsParallel().ForAll(j =>
+                    //for (int j=0; j<PARTS_N; j++)
+                    {
                         int k = j * m;
                         it = Tools.Range(0, m);
 
@@ -73,6 +75,7 @@ namespace _4Pic.src
                             f(this, k + i);
                         });
                     }
+                    );
                     if (n != 0) {
                         int k = PARTS_N * m;
                         it = Tools.Range(0, n);
