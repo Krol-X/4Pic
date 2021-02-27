@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.ComponentModel;
 using _4Pic.src;
+using static _4Pic.src.DoHnd;
+using static _4Pic.src.TBitmap;
 
 namespace _4Pic
 {
@@ -93,26 +95,18 @@ namespace _4Pic
 
         #region MainMenu_Image Handlers
 
-        private void negative(ref byte[] rgb, ref int[] yuv, int i) {
-            rgb[i + 0] ^= 0xFF;
-            rgb[i + 1] ^= 0xFF;
-            rgb[i + 2] ^= 0xFF;
-        }
         private void MainMenu_tonegative_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                image.do_image(negative, true);
-                MainCanvas.Image = image.toBitmap();
+                MainCanvas.Image = image.do_image(negative, imIter).toBitmap();
             }
         }
 
-        public void grayscale(ref byte[] im, ref int[] yuv, int i) {
-            im[i + 0] = im[i + 1] = im[i + 2] = (byte)yuv[i + 0];
-        }
         private void MainMenu_tograyscale_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                image.update_yuv();
-                image.do_image(grayscale, true);
-                MainCanvas.Image = image.toBitmap();
+                MainCanvas.Image = image
+                    .do_image(yuv_fromrgb, imIter, true)
+                    .do_image(grayscale, imIter)
+                    .toBitmap();
             }
         }
 

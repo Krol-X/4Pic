@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Windows;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
@@ -55,15 +52,33 @@ namespace _4Pic.src
         // parallel = true
         public static void hist_rgb(TBitmap im, int i) {
             var rgb = im.rgb; var hist = im.hist;
-            hist[rgb[i + 0], TBitmap.R]++;
-            hist[rgb[i + 1], TBitmap.G]++;
-            hist[rgb[i + 2], TBitmap.B]++;
+            hist[rgb[i + 0], R]++;
+            hist[rgb[i + 1], G]++;
+            hist[rgb[i + 2], B]++;
         }
 
         // parallel = true
         public static void hist_hue(TBitmap im, int i) {
             var yuv = im.yuv; var hist = im.hist;
-            hist[yuv[i + 0], TBitmap.H]++;
+            hist[yuv[i + 0], H]++;
+        }
+
+        #endregion
+
+        #region Basic operations
+
+        // parallel = true
+        public static void negative(TBitmap im, int i) {
+            var rgb = im.rgb;
+            rgb[i + 0] ^= 0xFF;
+            rgb[i + 1] ^= 0xFF;
+            rgb[i + 2] ^= 0xFF;
+        }
+
+        // parallel = true
+        public static void grayscale(TBitmap im, int i) {
+            var rgb = im.rgb; var yuv = im.yuv;
+            rgb[i + 0] = rgb[i + 1] = rgb[i + 2] = (byte)yuv[i + 0];
         }
 
         #endregion
@@ -71,9 +86,10 @@ namespace _4Pic.src
         #region Binary handlers
 
         // parallel = true
-        public static void to_binary(TBitmap im, int i, Object[] p) {
-            var rgb = im.rgb; var yuv = im.yuv; var thr = (byte)p[0];
-            rgb[i + 0] = rgb[i + 1] = rgb[i + 2] = (byte)(yuv[i + 0] < thr ? 255 : 0);
+        public static void binary(TBitmap im, int i, object thr) {
+            var rgb = im.rgb; var yuv = im.yuv;
+            rgb[i + 0] = rgb[i + 1] = rgb[i + 2] =
+                (byte)((yuv[i + 0] < (int)thr) ? 255 : 0);
         }
 
         #endregion
@@ -81,34 +97,45 @@ namespace _4Pic.src
         #region Brightness, contrast and historam handlers
 
         // parallel = true
-        public static void brightness(TBitmap im, int i, Object[] p) {
-            var yuv = im.yuv; var x = (int)p[0];
-            yuv[i + 0] = Tools.FixByte(yuv[i + 0] + x);
+        public static void brightness(TBitmap im, int i, object bri) {
+            var yuv = im.yuv;
+            yuv[i + 0] = Tools.FixByte(yuv[i + 0] + (int)bri);
         }
 
         // parallel = true
-        public static void contrast(TBitmap im, int i, Object[] p) {
-            var rgb = im.rgb; var x = (int)p[0];
+        public static void contrast(TBitmap im, int i, object con) {
+            var rgb = im.rgb; var x = (int)con;
             rgb[i + 0] = Tools.FixByte(x * (rgb[i + 0] - 128) + 128);
             rgb[i + 1] = Tools.FixByte(x * (rgb[i + 1] - 128) + 128);
             rgb[i + 2] = Tools.FixByte(x * (rgb[i + 2] - 128) + 128);
         }
 
         // parallel = false
-        public static void hist_minmax(TBitmap im, int i, Object[] p) {
-            var hist = im.hist; var mm = (MinMax<double>)p[0];
-            if (hist[3, i] < mm.min) { mm.min_i = i; mm.min = hist[3, i]; }
-            if (hist[3, i] > mm.max) { mm.max_i = i; mm.max = hist[3, i]; }
+        public static void hist_minmax(TBitmap im, int i, object p) {
+            var hist = im.hist; var mm = (MinMax<double>)p;
+            if (hist[i, H] < mm.min) { mm.min_i = i; mm.min = hist[i, H]; }
+            if (hist[i, H] > mm.max) { mm.max_i = i; mm.max = hist[i, H]; }
+        }
+
+        public struct TDrawSpec
+        {
+            public int h_width, h_height;
+            public MinMax<double> mm;
+            public SolidBrush brush;
+            public Graphics graph;
+
+            public TDrawSpec(MinMax<double> m, int hw, int hh, SolidBrush b, Graphics g) {
+                mm = m; h_width = hw; h_height = hh;
+                brush = b; graph = g;
+            }
         }
 
         // parallel = false
-        public static void hist_draw(TBitmap im, int i, Object[] p) {
-            var hist = im.hist; var mm = (MinMax<double>)p[0];
-            var size = (Point)p[1]; var brush = (SolidBrush)p[2];
-            var g = (Graphics)p[3];
-            // todo: Point for doubles?
-            int value = (int)(hist[i, TBitmap.H] / mm.max * size.Y);
-            g.FillRectangle(brush, i * size.X, size.Y - value, size.X, value);
+        public static void hist_draw(TBitmap im, int i, object p) {
+            var hist = im.hist; var spec = (TDrawSpec)p;
+            var w = spec.h_width; var h = spec.h_height;
+            int value = (int)(hist[i, H] / spec.mm.max * h);
+            spec.graph.FillRectangle(spec.brush, i * w, h - value, w, value);
         }
 
         #endregion

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
-using System.Runtime.InteropServices;
-using System.Drawing;
 
 namespace _4Pic
 {
@@ -22,12 +20,16 @@ namespace _4Pic
             return result;
         }
 
-        public static byte FixPix(byte pix) {
+        public static byte FixByte(byte pix) {
             return Math.Max((byte)0, Math.Min((byte)255, pix));
         }
         public static byte FixByte(double pix) {
             return (byte)Math.Max(0, Math.Min(255, pix));
-        }   
+        }
+
+        public static IEnumerable<int> Range(int start, int count, int step = 1) {
+            for (int it = start; it < count; it += step) yield return it;
+        }
     }
 
     public class StackX<T> : List<T>

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using static _4Pic.src.DoHnd;
+using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
@@ -46,11 +42,12 @@ namespace _4Pic.src
         private void track_change(int threshold, bool adaptive) {
             label_thr.Text = threshold.ToString();
 
-            TBitmap im = srcimage.clone();
+            var im = srcimage.clone();
             if (adaptive) {
                 throw new NotImplementedException();
             } else {
-                image = im.do_image(DoHnd.to_binary, TBitmap.imIter, true, threshold);
+                image = im.do_image(yuv_fromrgb, imIter, true)
+                    .do_image(binary, imIter, threshold, true);
             }
         }
     }

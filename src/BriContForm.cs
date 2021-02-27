@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using static _4Pic.src.DoHnd;
+using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
@@ -16,17 +18,8 @@ namespace _4Pic.src
             }
         }
 
-        private const int HIST_COLW = 2, HIST_COLH = 100;
-        private static Color BACK_COLOR = Color.Black;
-        private static SolidBrush HIST_BRUSH = new SolidBrush(Color.LightGray);
-        private static SolidBrush HIST_MAX_BRUSH = new SolidBrush(Color.Red);
-
-        private int brightness;
-        private double contrast;
-        private Bitmap hist_image;
-        private Graphics hist_g;
-        protected int hmin_i, hmax_i;
-        protected double hmin, hmax;
+        private static Color COLOR_BACK = Color.Black;
+        private static SolidBrush BRUSH_H = new SolidBrush(Color.LightGray);
 
 
 
@@ -56,34 +49,37 @@ namespace _4Pic.src
         private void track_change(int bri, int con) {
             label_bri.Text = bri.ToString();
             label_con.Text = con.ToString();
-            brightness = bri;
 
-            TBitmap im = new TBitmap(srcimage, true);
-            
+            TBitmap im = srcimage.clone();
+
             // Brightness
-            im.do_image(set_brightness, true);
-            im.update_rgb();
+            im.do_image(brightness, imIter, bri, true)
+                .do_image(rgb_fromyuv, imIter, true);
 
             // Contrast
-            contrast = 259.0 * (con + 255.0) / (255.0 * (259.0 - con));
-            im.do_image(set_contrast, true);
-            im.update_yuv();
+            con = (int)(259.0 * (con + 255.0) / (255.0 * (259.0 - con)));
+            im.do_image(contrast, imIter, con, true)
+                .do_image(yuv_fromrgb, imIter, true);
 
             image = im;
 
             // Histogram
-            hist_image = new Bitmap(HIST_COLW * 256, HIST_COLH);
-            hist_g = Graphics.FromImage(hist_image);
-            im.update_hist();
+            MinMax<double> mm = new MinMax<double>();
 
-            hmin_i = hmax_i = 0;
-            hmin = double.MaxValue; hmax = 0;
-            im.do_image(calc_hminmax);
-            hmax -= hmin;
+            im.do_image(hist_clear, hIter, true)
+                .do_image(hist_hue, imIter, true)
+                .do_image(hist_minmax, hIter, mm);
 
-            hist_g.Clear(BACK_COLOR);
-            im.do_image(draw_hist);
-            HistCanvas.Image = hist_image;
+            int HIST_COLW = HistCanvas.Width / 256;
+            int HIST_COLH = HistCanvas.Height;
+            var h_im = new Bitmap(HIST_COLW * 256, HIST_COLH);
+            var g = Graphics.FromImage(h_im);
+            var spec = new TDrawSpec(mm, HIST_COLW, HIST_COLH, BRUSH_H, g);
+
+            g.Clear(COLOR_BACK);
+            im.do_image(hist_draw, hIter, spec);
+
+            HistCanvas.Image = h_im;
         }
     }
 }
