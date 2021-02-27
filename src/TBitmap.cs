@@ -14,7 +14,7 @@ namespace _4Pic.src
         const int PARTS_N = 8;
 
         public delegate void do_hnd(TBitmap image, int i);
-        public delegate void do_hndp(TBitmap image, int i, object param);
+        public delegate void do_hndp<T>(TBitmap image, int i, T param);
         public delegate IEnumerable<int> do_iter(TBitmap im);
 
         public readonly static int R = 0, G = 1, B = 2, H = 3;
@@ -110,7 +110,7 @@ namespace _4Pic.src
             return this;
         }
 
-        public TBitmap do_image(do_hndp f, do_iter iter, object p, bool use_parallel = false) {
+        public TBitmap do_image<T>(do_hndp<T> f, do_iter iter, T p, bool use_parallel = false) {
             use_parallel = false;
             var it = iter(this);
             if (use_parallel) {
