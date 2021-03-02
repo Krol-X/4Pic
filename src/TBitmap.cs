@@ -22,16 +22,16 @@ namespace _4Pic.src
 
         public byte[] rgb;
         public int[] yuv;
-        public double[] hsb;
+        public double[] hsv;
         public double[,] hist; // [i, channel]
-        public readonly int width, height, size, count;
+        public readonly int width, height, size, byte_count;
 
         private TBitmap(int w, int h) {
             width = w; height = h;
-            size = w * h; count = size * pixel_size;
-            rgb = new byte[count];
-            yuv = new int[count];
-            hsb = new double[count];
+            size = w * h; byte_count = size * pixel_size;
+            rgb = new byte[byte_count];
+            yuv = new int[byte_count];
+            hsv = new double[byte_count];
             hist = new double[256, 4];
         }
 
@@ -43,7 +43,7 @@ namespace _4Pic.src
             var data = src.LockBits(new Rectangle(0, 0, width, height),
                                     ImageLockMode.ReadOnly,
                                     PixelFormat.Format32bppArgb);
-            Marshal.Copy(data.Scan0, rgb, 0, count);
+            Marshal.Copy(data.Scan0, rgb, 0, byte_count);
             src.UnlockBits(data);
         }
 
@@ -56,7 +56,7 @@ namespace _4Pic.src
             var data = result.LockBits(new Rectangle(0, 0, width, height),
                                     ImageLockMode.WriteOnly,
                                     PixelFormat.Format32bppArgb);
-            Marshal.Copy(rgb, 0, data.Scan0, count);
+            Marshal.Copy(rgb, 0, data.Scan0, byte_count);
             result.UnlockBits(data);
             return result;
         }

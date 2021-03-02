@@ -106,9 +106,9 @@ namespace _4Pic
 
         private void MainMenu_tograyscale_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                if (DoHnd.USE_HSB) {
-                    image.do_image(hsb_fromrgb, imIter, true)
-                        .do_image(grayscale_hsb, imIter);  
+                if (DoHnd.USE_hsv) {
+                    image.do_image(hsv_fromrgb, imIter, true)
+                        .do_image(grayscale_hsv, imIter);  
                 } else {
                     image.do_image(yuv_fromrgb, imIter, true)
                         .do_image(grayscale, imIter);
