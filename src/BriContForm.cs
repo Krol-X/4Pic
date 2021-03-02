@@ -30,13 +30,6 @@ namespace _4Pic.src
             on_change(track_bri.Value, track_con.Value);
         }
 
-        private void button_ok_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.OK;
-        }
-        private void button_cancel_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.Cancel;
-        }
-
         private void track_bri_Scroll(object sender, EventArgs e) {
             on_change(track_bri.Value, track_con.Value);
         }
@@ -56,18 +49,32 @@ namespace _4Pic.src
             ud_bri.Value = track_bri.Value = bri;
             ud_con.Value = track_con.Value = con;
 
-            TBitmap im = srcimage
-                .clone()
-                .do_image(yuv_fromrgb, imIter, true);
+            bool USE_HSB = DoHnd.USE_HSB;
 
-            // Brightness
-            im.do_image(brightness, imIter, bri, true)
-                .do_image(rgb_fromyuv, imIter, true);
+            TBitmap im = srcimage.clone();
+            if (USE_HSB) {
+                im.do_image(hsb_fromrgb, imIter, true);
 
-            // Contrast
-            var c = 259.0 * (con + 255.0) / (255.0 * (259.0 - con));
-            im.do_image(contrast, imIter, c, true)
-                .do_image(yuv_fromrgb, imIter, true);
+                // Brightness
+                im.do_image(brightness_hsb, imIter, (double)bri/256, true);
+
+                // Contrast
+                double c = con / 256;
+                im.do_image(contrast_hsb, imIter, c, true)
+                    .do_image(rgb_fromhsb, imIter, true);
+
+            } else {
+                im.do_image(yuv_fromrgb, imIter, true);
+
+                // Brightness
+                im.do_image(brightness, imIter, bri, true);
+                im.do_image(rgb_fromyuv, imIter, true);
+
+                // Contrast
+                var c = 259.0 * (con + 255.0) / (255.0 * (259.0 - con));
+                im.do_image(contrast, imIter, c, true)
+                    .do_image(yuv_fromrgb, imIter, true);
+            }
 
             image = im;
 
@@ -76,9 +83,13 @@ namespace _4Pic.src
                 min = double.MaxValue
             };
 
-            im.do_image(hist_clear, hIter, true)
-                .do_image(hist_hue, imIter, true)
-                .do_image(hist_minmax, hIter, mm);
+            im.do_image(hist_clear, hIter, true);
+            if (USE_HSB) {
+                im.do_image(hist_hue_hsb, imIter, true);
+            } else {
+                im.do_image(hist_hue, imIter, true);
+            }
+            im.do_image(hist_minmax, hIter, mm);
 
             int HIST_COLW = HistCanvas.Width / 256;
             int HIST_COLH = HistCanvas.Height;

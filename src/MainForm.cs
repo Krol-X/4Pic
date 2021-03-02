@@ -56,6 +56,7 @@ namespace _4Pic
             MainMenu_tobinary.Enabled = enabled;
             MainMenu_bri_con.Enabled = enabled;
             MainMenu_filter.Enabled = enabled;
+            MainMenu_figures.Enabled = enabled;
             MainMenu_Script.Enabled = enabled;
         }
 
@@ -105,10 +106,14 @@ namespace _4Pic
 
         private void MainMenu_tograyscale_Click(object sender, EventArgs e) {
             if (MainCanvas.Image != null) {
-                MainCanvas.Image = image
-                    .do_image(yuv_fromrgb, imIter, true)
-                    .do_image(grayscale, imIter)
-                    .toBitmap();
+                if (DoHnd.USE_HSB) {
+                    image.do_image(hsb_fromrgb, imIter, true)
+                        .do_image(grayscale_hsb, imIter);  
+                } else {
+                    image.do_image(yuv_fromrgb, imIter, true)
+                        .do_image(grayscale, imIter);
+                }
+                MainCanvas.Image = image.toBitmap();
             }
         }
 

@@ -38,18 +38,20 @@
             // 
             // textbox
             // 
+            this.textbox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textbox.Location = new System.Drawing.Point(12, 39);
             this.textbox.Multiline = true;
             this.textbox.Name = "textbox";
             this.textbox.Size = new System.Drawing.Size(240, 200);
-            this.textbox.TabIndex = 0;
+            this.textbox.TabIndex = 4;
             // 
             // combo_type
             // 
             this.combo_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.combo_type.FormattingEnabled = true;
             this.combo_type.Items.AddRange(new object[] {
-            "Средний",
+            "Обычный",
+            "Усредняющий",
             "Медианный"});
             this.combo_type.Location = new System.Drawing.Point(12, 12);
             this.combo_type.Name = "combo_type";
@@ -62,27 +64,26 @@
             this.button_cancel.Location = new System.Drawing.Point(142, 278);
             this.button_cancel.Name = "button_cancel";
             this.button_cancel.Size = new System.Drawing.Size(110, 23);
-            this.button_cancel.TabIndex = 6;
+            this.button_cancel.TabIndex = 7;
             this.button_cancel.Text = "Отмена";
             this.button_cancel.UseVisualStyleBackColor = true;
             // 
             // button_ok
             // 
-            this.button_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button_ok.Location = new System.Drawing.Point(12, 278);
             this.button_ok.Name = "button_ok";
             this.button_ok.Size = new System.Drawing.Size(110, 23);
-            this.button_ok.TabIndex = 5;
+            this.button_ok.TabIndex = 6;
             this.button_ok.Text = "ОК";
             this.button_ok.UseVisualStyleBackColor = true;
+            this.button_ok.Click += new System.EventHandler(this.button_ok_Click);
             // 
             // button_preview
             // 
-            this.button_preview.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button_preview.Location = new System.Drawing.Point(12, 249);
             this.button_preview.Name = "button_preview";
             this.button_preview.Size = new System.Drawing.Size(240, 23);
-            this.button_preview.TabIndex = 7;
+            this.button_preview.TabIndex = 5;
             this.button_preview.Text = "Предпросмотр";
             this.button_preview.UseVisualStyleBackColor = true;
             this.button_preview.Click += new System.EventHandler(this.button_preview_Click);
@@ -98,7 +99,7 @@
             this.button_save.Location = new System.Drawing.Point(231, 12);
             this.button_save.Name = "button_save";
             this.button_save.Size = new System.Drawing.Size(21, 21);
-            this.button_save.TabIndex = 8;
+            this.button_save.TabIndex = 3;
             this.button_save.UseVisualStyleBackColor = true;
             this.button_save.Click += new System.EventHandler(this.button_save_Click);
             // 
@@ -121,7 +122,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.button_cancel;
             this.ClientSize = new System.Drawing.Size(264, 312);
+            this.ControlBox = false;
             this.Controls.Add(this.button_save);
             this.Controls.Add(this.button_preview);
             this.Controls.Add(this.button_cancel);

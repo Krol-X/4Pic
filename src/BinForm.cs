@@ -26,13 +26,6 @@ namespace _4Pic.src
             change(track_thr.Value, checkbox_adaptive.Checked);
         }
 
-        private void button_ok_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.OK;
-        }
-        private void button_cancel_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.Cancel;
-        }
-
         private void track_thr_Scroll(object sender, EventArgs e) {
             change(track_thr.Value, checkbox_adaptive.Checked);
         }
@@ -48,8 +41,13 @@ namespace _4Pic.src
             if (adaptive) {
                 throw new NotImplementedException();
             } else {
-                image = im.do_image(yuv_fromrgb, imIter, true)
-                    .do_image(binary, imIter, threshold, true);
+                if (DoHnd.USE_HSB) {
+                    image = im.do_image(hsb_fromrgb, imIter, true)
+                        .do_image(binary_hsb, imIter, threshold, true);
+                } else {
+                    image = im.do_image(yuv_fromrgb, imIter, true)
+                        .do_image(binary, imIter, threshold, true);
+                }
             }
         }
     }

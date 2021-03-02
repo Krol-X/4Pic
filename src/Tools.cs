@@ -27,6 +27,36 @@ namespace _4Pic
             return (byte)Math.Max(0, Math.Min(255, pix));
         }
 
+        public static int Min(params int[] values) {
+            var result = values[0];
+            foreach (var x in values) {
+                result = Math.Min(x, result);
+            }
+            return result;
+        }
+        public static double Min(params double[] values) {
+            var result = values[0];
+            foreach (var x in values) {
+                result = Math.Min(x, result);
+            }
+            return result;
+        }
+
+        public static int Max(params int[] values) {
+            var result = values[0];
+            foreach (var x in values) {
+                result = Math.Max(x, result);
+            }
+            return result;
+        }
+        public static double Max(params double[] values) {
+            var result = values[0];
+            foreach (var x in values) {
+                result = Math.Max(x, result);
+            }
+            return result;
+        }
+
         public static IEnumerable<int> Range(int start, int count, int step = 1) {
             for (int it = start; it < count; it += step) yield return it;
         }

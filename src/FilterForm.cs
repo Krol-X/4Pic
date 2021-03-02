@@ -1,30 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static _4Pic.src.DoHnd;
+using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
     public partial class FilterForm : Form
     {
-        private TBitmap srcimage;
-        public TBitmap image;
+        private TBitmap srcimage, curimage;
 
-        private int filter_type;
-        private double[,] mat;
+        public TBitmap image
+        {
+            get { return curimage; }
+            set {
+                curimage = value;
+                ((MainForm)Owner).MainCanvas.Image = curimage.toBitmap();
+            }
+        }
 
-        #region Filter
+
 
         public FilterForm(Form owner, TBitmap image) {
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;
+            srcimage.do_image(yuv_fromrgb, imIter, true);
+            combo_type.SelectedIndex = 0;
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.OK;
-        }
-        private void button_cancel_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.Cancel;
+            if (change()) {
+                DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
 
         private void button_open_Click(object sender, EventArgs e) {
@@ -48,13 +59,62 @@ namespace _4Pic.src
             }
         }
 
-        private void button_preview_Click(object sender, EventArgs e) {
-            // ...
-            ((MainForm)Owner).MainCanvas.Image = image.toBitmap();
+        private TFilterData getMatrix(string[] src) {
+            TFilterData result = new TFilterData();
+            List<double> data = new List<double>();
+            int w = 0;
+            foreach (string line in src) {
+                var nums = Regex.Replace(line, @"\s+", " ").Trim().Split(' ');
+                int cou = 0;
+                foreach (string num in nums) {
+                    try {
+                        var n = Convert.ToDouble(num);
+                        data.Add(n);
+                        cou++;
+                    } catch {
+                        MessageBox.Show("Неверный формат числа!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return null;
+                    }
+                }
+                if (w == 0) w = cou;
+                if (cou != w) {
+                    MessageBox.Show("Количество строк должно быть одинаковым!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+            result.width = w;
+            result.height = w == 0? 0: data.Count / w;
+            result.mat = data.ToArray();
+            result.sum = 0;
+            data.ForEach(x => result.sum += Math.Abs(x));
+            return result;
         }
 
-        #endregion
+        private void button_preview_Click(object sender, EventArgs e) {
+            change();
+        }
 
+        private bool change() {
+            var mat = getMatrix(textbox.Lines);
+            if (mat == null) return false;
+            if (mat.width < 3 || mat.height < 3) {
+                MessageBox.Show("Слишком маленький размер матрицы!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if ((mat.width | mat.height & 1) == 1) {
+                MessageBox.Show("Количество линий и столбцов должно быть нечётным!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
+            int i = combo_type.SelectedIndex;
+            var im = srcimage.clone();
+            im.yuv = (int[])srcimage.yuv.Clone();
+            mat.src = srcimage;
+
+            do_hnd<TFilterData>[] filter = { filter_simple, filter_average, filter_median };
+            image = im.do_image<TFilterData>(filter[i], imIter, mat, true)
+                .do_image(rgb_fromyuv, imIter, true);
+            return true;
+        }
     }
 }

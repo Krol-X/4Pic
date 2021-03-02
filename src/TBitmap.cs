@@ -22,6 +22,7 @@ namespace _4Pic.src
 
         public byte[] rgb;
         public int[] yuv;
+        public double[] hsb;
         public double[,] hist; // [i, channel]
         public readonly int width, height, size, count;
 
@@ -30,6 +31,7 @@ namespace _4Pic.src
             size = w * h; count = size * pixel_size;
             rgb = new byte[count];
             yuv = new int[count];
+            hsb = new double[count];
             hist = new double[256, 4];
         }
 
