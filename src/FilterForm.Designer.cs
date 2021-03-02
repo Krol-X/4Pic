@@ -34,6 +34,9 @@
             this.button_save = new System.Windows.Forms.Button();
             this.button_open = new System.Windows.Forms.Button();
             this.dialog_save = new System.Windows.Forms.SaveFileDialog();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.status_label = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textbox
@@ -118,13 +121,31 @@
             // 
             this.dialog_save.Filter = "Текстовые файлы|*.txt|Все файлы|*.*";
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.status_label});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 312);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(264, 22);
+            this.statusStrip1.SizingGrip = false;
+            this.statusStrip1.TabIndex = 8;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // status_label
+            // 
+            this.status_label.Name = "status_label";
+            this.status_label.Size = new System.Drawing.Size(38, 17);
+            this.status_label.Text = "Готов";
+            // 
             // FilterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_cancel;
-            this.ClientSize = new System.Drawing.Size(264, 312);
+            this.ClientSize = new System.Drawing.Size(264, 334);
             this.ControlBox = false;
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.button_save);
             this.Controls.Add(this.button_preview);
             this.Controls.Add(this.button_cancel);
@@ -135,8 +156,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FilterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Filter";
+            this.Text = "Фильтр";
             this.TopMost = true;
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -153,5 +176,7 @@
         private System.Windows.Forms.OpenFileDialog dialog_open;
         private System.Windows.Forms.Button button_save;
         private System.Windows.Forms.SaveFileDialog dialog_save;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel status_label;
     }
 }

@@ -27,7 +27,6 @@ namespace _4Pic.src
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;
-            srcimage.do_image(yuv_fromrgb, imIter, true);
             combo_type.SelectedIndex = 0;
         }
 
@@ -86,7 +85,7 @@ namespace _4Pic.src
             result.height = w == 0? 0: data.Count / w;
             result.mat = data.ToArray();
             result.sum = 0;
-            data.ForEach(x => result.sum += Math.Abs(x));
+            data.ForEach(x => result.sum += x);
             return result;
         }
 
@@ -95,6 +94,8 @@ namespace _4Pic.src
         }
 
         private bool change() {
+            status_label.Text = "Идёт обработка...";
+            this.Update();
             var mat = getMatrix(textbox.Lines);
             if (mat == null) return false;
             if (mat.width < 3 || mat.height < 3) {
@@ -108,12 +109,11 @@ namespace _4Pic.src
 
             int i = combo_type.SelectedIndex;
             var im = srcimage.clone();
-            im.yuv = (int[])srcimage.yuv.Clone();
             mat.src = srcimage;
 
             do_hnd<TFilterData>[] filter = { filter_simple, filter_average, filter_median };
-            image = im.do_image<TFilterData>(filter[i], imIter, mat, true)
-                .do_image(rgb_fromyuv, imIter, true);
+            image = im.do_image<TFilterData>(filter[i], imIter, mat, true);
+            status_label.Text = "Завершено";
             return true;
         }
     }

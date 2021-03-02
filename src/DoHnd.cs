@@ -1,6 +1,4 @@
-﻿using _4Pic;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using static _4Pic.src.TBitmap;
 
@@ -226,13 +224,14 @@ namespace _4Pic.src
             public double sum;
         }
 
+        // parallel = true
         public static void filter_simple(TBitmap im, int i, TFilterData data) {
-            var yuv = data.src.yuv;
+            var rgb = data.src.rgb;
             int w = im.width, h = im.height;
             int iy = i / w, ix = i % w;
             int dw = data.width >> 1, dh = data.height >> 1;
             int cou = 0;
-            double result = 0;
+            double r = 0, g = 0, b = 0;
 
             for (int y = -dh; y <= dh; y++) {
                 int yy = iy + y;
@@ -243,22 +242,28 @@ namespace _4Pic.src
                     int xx = ix + x;
                     if (xx < 0) continue;
                     if (xx >= w) break;
-                    int ii = yy * w + xx;
-                    double value = data.mat[cou++];
-                    result += value * yuv[ii << 2];
+                    int ii = (yy * w + xx) << 2;
+
+                    double koef = data.mat[cou++];
+                    r += koef * rgb[ii + 0];
+                    g += koef * rgb[ii + 1];
+                    b += koef * rgb[ii + 2];
                 }
             }
-            im.yuv[i << 2] = Tools.FixByte(result);
+            i <<= 2;
+            im.rgb[i + 0] = Tools.FixByte(r);
+            im.rgb[i + 1] = Tools.FixByte(g);
+            im.rgb[i + 2] = Tools.FixByte(b);
         }
 
-        // parallel = false
+        // parallel = true
         public static void filter_average(TBitmap im, int i, TFilterData data) {
-            var yuv = data.src.yuv;
+            var rgb = data.src.rgb;
             int w = im.width, h = im.height;
             int iy = i / w, ix = i % w;
             int dw = data.width >> 1, dh = data.height >> 1;
             int cou = 0;
-            double result = 0;
+            double r = 0, g = 0, b = 0;
 
             for (int y = -dh; y <= dh; y++) {
                 int yy = iy + y;
@@ -269,44 +274,58 @@ namespace _4Pic.src
                     int xx = ix + x;
                     if (xx < 0) continue;
                     if (xx >= w) break;
-                    int ii = yy * w + xx;
-                    double value = data.mat[cou++];
-                    result += value * yuv[ii << 2];
+                    int ii = (yy * w + xx) << 2;
+
+                    double koef = data.mat[cou++];
+                    r += koef * rgb[ii + 0];
+                    g += koef * rgb[ii + 1];
+                    b += koef * rgb[ii + 2];
                 }
             }
-            im.yuv[i << 2] = Tools.FixByte(result / data.sum);
+            i <<= 2;
+            im.rgb[i + 0] = Tools.FixByte(r / data.sum);
+            im.rgb[i + 1] = Tools.FixByte(g / data.sum);
+            im.rgb[i + 2] = Tools.FixByte(b / data.sum);
         }
 
-        // todo: fixit
-        // parallel = false
+        // parallel = true
         public static void filter_median(TBitmap im, int i, TFilterData data) {
-            var yuv = data.src.yuv;
+            var rgb = data.src.rgb;
             int w = im.width, h = im.height;
             int iy = i / w, ix = i % w;
             int dw = data.width >> 1, dh = data.height >> 1;
             int cou = 0;
-            List<double> lst = new List<double>();
+            var r = new List<double>();
+            var g = new List<double>();
+            var b = new List<double>();
 
             for (int y = -dh; y <= dh; y++) {
                 int yy = iy + y;
                 if (yy < 0 || yy >= h) {
-                    lst.Add(0);
+                    r.Add(0); g.Add(0); b.Add(0);
                     continue;
                 }
 
                 for (int x = -dw; x <= dw; x++) {
                     int xx = ix + x;
                     if (xx < 0 || xx >= w) {
-                        lst.Add(0);
+                        r.Add(0); g.Add(0); b.Add(0);
                         continue;
                     }
-                    int ii = yy * w + xx;
-                    double value = data.mat[cou++];
-                    lst.Add(value * yuv[ii << 2]);
+                    int ii = (yy * w + xx) << 2;
+
+                    double koef = data.mat[cou++];
+                    r.Add(koef * rgb[ii + 0]);
+                    g.Add(koef * rgb[ii + 1]);
+                    b.Add(koef * rgb[ii + 2]);
                 }
             }
-            lst.Sort();
-            im.yuv[i << 2] = Tools.FixByte(lst[dw + data.width * dh]);
+            r.Sort(); g.Sort(); b.Sort();
+            i <<= 2;
+            int med = dw + data.width * dh;
+            im.rgb[i + 0] = Tools.FixByte(r[med]);
+            im.rgb[i + 1] = Tools.FixByte(g[med]);
+            im.rgb[i + 2] = Tools.FixByte(b[med]);
         }
 
         #endregion
