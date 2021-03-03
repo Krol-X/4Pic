@@ -45,11 +45,13 @@ namespace _4Pic.src
             on_change((int)ud_bri.Value, (int)ud_con.Value);
         }
 
+
+
         private void on_change(int bri, int con) {
             ud_bri.Value = track_bri.Value = bri;
             ud_con.Value = track_con.Value = con;
 
-            bool USE_hsv = DoHnd.USE_hsv;
+            bool USE_hsv = DoHnd.USE_HSV;
 
             TBitmap im = srcimage.clone();
             if (USE_hsv) {
@@ -79,18 +81,7 @@ namespace _4Pic.src
             image = im;
 
             // Histogram
-            //MinMax<double> mm = new MinMax<double>() {
-            //    min = double.MaxValue
-            //};
-
-            im.do_image(hist_clear, hIter, true);
-            if (USE_hsv) {
-                im.do_image(hist_hue_hsv, imIter, true);
-            } else {
-                im.do_image(hist_hue, imIter, true);
-            }
-            im.do_image(hist_divide, hIter, true);
-            //im.do_image(hist_minmax, hIter, mm);
+            Tools.CalcHist(im);
             var pt = chart_hist.Series["main"].Points;
             pt.Clear();
             for (int i=0; i < 256; i++) {

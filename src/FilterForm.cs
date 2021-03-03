@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ namespace _4Pic.src
     public partial class FilterForm : Form
     {
         private TBitmap srcimage, curimage;
+        private FFT fft;
 
         public TBitmap image
         {
@@ -31,7 +33,7 @@ namespace _4Pic.src
         }
 
         private void button_ok_Click(object sender, EventArgs e) {
-            if (change()) {
+            if (change(cb_freq.Checked)) {
                 DialogResult = DialogResult.OK;
                 this.Close();
             }
@@ -90,10 +92,10 @@ namespace _4Pic.src
         }
 
         private void button_preview_Click(object sender, EventArgs e) {
-            change();
+            change(cb_freq.Checked);
         }
 
-        private bool change() {
+        private bool change(bool fourier) {
             status_label.Text = "Идёт обработка...";
             this.Update();
             var mat = getMatrix(textbox.Lines);
@@ -108,11 +110,26 @@ namespace _4Pic.src
             }
 
             int i = combo_type.SelectedIndex;
-            var im = srcimage.clone();
-            mat.src = srcimage;
+            TBitmap im, srcfft;
+            if (fourier) {
+                fft = new FFT(srcimage.toBitmap());
+                fft.ForwardFFT();
+                fft.FFTShift();
+                // todo: codeit
+                fft.FFTShift();
+                fft.InverseFFT();
+                image = new TBitmap((Bitmap)fft.Obj);
+                //im = srcfft.clone();
+                //mat.src = srcfft;
 
-            do_hnd<TFilterData>[] filter = { filter_simple, filter_average, filter_median };
-            image = im.do_image<TFilterData>(filter[i], imIter, mat, true);
+
+            } else {
+                im = srcimage.clone();
+                mat.src = srcimage;
+
+                do_hnd<TFilterData>[] filter = { filter_simple, filter_average, filter_median };
+                image = im.do_image<TFilterData>(filter[i], imIter, mat, true);
+            }    
             status_label.Text = "Завершено";
             return true;
         }

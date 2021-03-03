@@ -36,15 +36,17 @@
             this.MainMenu_tobinary = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu_sep1 = new System.Windows.Forms.ToolStripSeparator();
             this.MainMenu_bri_con = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_lincor = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu_filter = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.MainMenu_figures = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu_Script = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu_Run = new System.Windows.Forms.ToolStripMenuItem();
             this.MainCanvas = new System.Windows.Forms.PictureBox();
             this.OpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveAsDialog = new System.Windows.Forms.SaveFileDialog();
             this.FlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.MainMenu_figures = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_power = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainCanvas)).BeginInit();
             this.FlowPanel.SuspendLayout();
@@ -103,6 +105,8 @@
             this.MainMenu_tobinary,
             this.MainMenu_sep1,
             this.MainMenu_bri_con,
+            this.MainMenu_power,
+            this.MainMenu_lincor,
             this.MainMenu_filter,
             this.toolStripSeparator1,
             this.MainMenu_figures});
@@ -147,6 +151,13 @@
             this.MainMenu_bri_con.Text = "Яркость и контрастность";
             this.MainMenu_bri_con.Click += new System.EventHandler(this.MainMenu_bri_con_Click);
             // 
+            // MainMenu_lincor
+            // 
+            this.MainMenu_lincor.Name = "MainMenu_lincor";
+            this.MainMenu_lincor.Size = new System.Drawing.Size(251, 22);
+            this.MainMenu_lincor.Text = "Линейная коррекция";
+            this.MainMenu_lincor.Click += new System.EventHandler(this.MainMenu_lincor_Click);
+            // 
             // MainMenu_filter
             // 
             this.MainMenu_filter.Name = "MainMenu_filter";
@@ -154,6 +165,19 @@
             this.MainMenu_filter.Size = new System.Drawing.Size(251, 22);
             this.MainMenu_filter.Text = "Фильтрация";
             this.MainMenu_filter.Click += new System.EventHandler(this.MainMenu_filter_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(248, 6);
+            // 
+            // MainMenu_figures
+            // 
+            this.MainMenu_figures.Name = "MainMenu_figures";
+            this.MainMenu_figures.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.MainMenu_figures.Size = new System.Drawing.Size(251, 22);
+            this.MainMenu_figures.Text = "Распознать фигуры";
+            this.MainMenu_figures.Click += new System.EventHandler(this.MainMenu_figures_Click);
             // 
             // MainMenu_Script
             // 
@@ -197,18 +221,12 @@
             this.FlowPanel.Size = new System.Drawing.Size(560, 347);
             this.FlowPanel.TabIndex = 2;
             // 
-            // toolStripSeparator1
+            // MainMenu_power
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(248, 6);
-            // 
-            // MainMenu_figures
-            // 
-            this.MainMenu_figures.Name = "MainMenu_figures";
-            this.MainMenu_figures.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.MainMenu_figures.Size = new System.Drawing.Size(251, 22);
-            this.MainMenu_figures.Text = "Распознать фигуры";
-            this.MainMenu_figures.Click += new System.EventHandler(this.MainMenu_figures_Click);
+            this.MainMenu_power.Name = "MainMenu_power";
+            this.MainMenu_power.Size = new System.Drawing.Size(251, 22);
+            this.MainMenu_power.Text = "Степенная функция";
+            this.MainMenu_power.Click += new System.EventHandler(this.MainMenu_power_Click);
             // 
             // MainForm
             // 
@@ -254,6 +272,8 @@
         private System.Windows.Forms.ToolStripMenuItem MainMenu_filter;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_figures;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_lincor;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_power;
     }
 }
 

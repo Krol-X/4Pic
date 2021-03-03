@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
+using _4Pic.src;
+using static _4Pic.src.DoHnd;
+using static _4Pic.src.TBitmap;
 
 namespace _4Pic
 {
@@ -59,6 +62,19 @@ namespace _4Pic
 
         public static IEnumerable<int> Range(int start, int count, int step = 1) {
             for (int it = start; it < count; it += step) yield return it;
+        }
+
+        public static TBitmap CalcHist(TBitmap im, bool calcsrc = false) {
+            im.do_image(hist_clear, hIter, true);
+            if (USE_HSV) {
+                if (calcsrc) im.do_image(hsv_fromrgb, imIter, true);
+                im.do_image(hist_hue_hsv, imIter, true);
+            } else {
+                if (calcsrc) im.do_image(yuv_fromrgb, imIter, true);
+                im.do_image(hist_hue, imIter, true);
+            }
+            im.do_image(hist_divide, hIter, true);    
+            return im;
         }
     }
 

@@ -8,7 +8,7 @@ namespace _4Pic.src
     public static class DoHnd
     {
         static bool BRI_WIKI = false;
-        public static bool USE_hsv = false;
+        public static bool USE_HSV = false;
 
         const int MID_GRAY = 159;
         public const double Kr = 0.299, Kb = 0.114;
@@ -127,6 +127,17 @@ namespace _4Pic.src
             hist[i, H] /= (double)count;
         }
 
+        // parallel = false
+        public static void hist_minmax(TBitmap im, int i, MinMax<double> mm) {
+            var hist = im.hist;
+            if (hist[i, H] < mm.min) {
+                mm.min_i = i; mm.min = hist[i, H];
+            }
+            if (hist[i, H] > mm.max) {
+                mm.max_i = i; mm.max = hist[i, H];
+            }
+        }
+
         #endregion
 
         #region Basic operations
@@ -149,6 +160,22 @@ namespace _4Pic.src
             rgb[i + 0] = rgb[i + 1] = rgb[i + 2] = (byte)im.hsv[i + 2];
         }
 
+        public class TPowerArg
+        {
+            public double c, k;
+
+            public TPowerArg(int k, int c) {
+                this.k = k;
+                this.c = c;
+            }
+        }
+        
+        // parallel = true
+        public static void power(TBitmap im, int i, TPowerArg arg) {
+            var yuv = im.yuv; i <<= 2;
+            yuv[i + 0] = Tools.FixByte(arg.c * Math.Pow(yuv[i + 0], arg.k));
+        }
+
         #endregion
 
         #region Binary handlers
@@ -165,13 +192,13 @@ namespace _4Pic.src
                 (byte)((im.hsv[i + 2] < (int)thr) ? 255 : 0);
         }
 
-        public static void binary_otsu1(TBitmap im, int i, TOtsuClass otsu) {
+        public static void binary_otsu1(TBitmap im, int i, TOtsuArg otsu) {
             var h = im.hist[i, H];
             otsu.nt += h;
             otsu.mt += h * i;
         }
 
-        public static void binary_otsu2(TBitmap im, int i, TOtsuClass otsu) {
+        public static void binary_otsu2(TBitmap im, int i, TOtsuArg otsu) {
             if (i == 0) return;
             var h = im.hist[i, H];
             otsu.m1 = otsu.q * otsu.m1 + i * h;
@@ -185,7 +212,7 @@ namespace _4Pic.src
 
         #endregion
 
-        #region Brightness, contrast and historam handlers
+        #region Brightness, contrast handlers
 
         // parallel = true
         public static void brightness(TBitmap im, int i, int bri) {
@@ -209,15 +236,9 @@ namespace _4Pic.src
             hsv[i + 1] = hsv[i + 1] + con;
         }
 
-        // parallel = false
-        public static void hist_minmax(TBitmap im, int i, MinMax<double> mm) {
-            var hist = im.hist;
-            if (hist[i, H] < mm.min) {
-                mm.min_i = i; mm.min = hist[i, H];
-            }
-            if (hist[i, H] > mm.max) {
-                mm.max_i = i; mm.max = hist[i, H];
-            }
+        public static void linear_correction(TBitmap im, int i, MinMax<double> mm) {
+            var yuv = im.yuv;
+            yuv[i + 0] = (int)((yuv[i + 0] - mm.min) * 255.0 / (mm.max - mm.min));
         }
 
         #endregion

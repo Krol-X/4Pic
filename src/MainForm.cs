@@ -99,22 +99,18 @@ namespace _4Pic
         #region MainMenu_Image Handlers
 
         private void MainMenu_tonegative_Click(object sender, EventArgs e) {
-            if (MainCanvas.Image != null) {
-                MainCanvas.Image = image.do_image(negative, imIter, true).toBitmap();
-            }
+             MainCanvas.Image = image.do_image(negative, imIter, true).toBitmap();
         }
 
         private void MainMenu_tograyscale_Click(object sender, EventArgs e) {
-            if (MainCanvas.Image != null) {
-                if (DoHnd.USE_hsv) {
-                    image.do_image(hsv_fromrgb, imIter, true)
-                        .do_image(grayscale_hsv, imIter);  
-                } else {
-                    image.do_image(yuv_fromrgb, imIter, true)
-                        .do_image(grayscale, imIter);
-                }
-                MainCanvas.Image = image.toBitmap();
+            if (DoHnd.USE_HSV) {
+                image.do_image(hsv_fromrgb, imIter, true)
+                    .do_image(grayscale_hsv, imIter);  
+            } else {
+                image.do_image(yuv_fromrgb, imIter, true)
+                    .do_image(grayscale, imIter);
             }
+            MainCanvas.Image = image.toBitmap();
         }
 
         private void MainMenu_tobinary_Click(object sender, EventArgs e) {
@@ -133,6 +129,31 @@ namespace _4Pic
             } else {
                 MainCanvas.Image = image.toBitmap();
             }
+        }
+
+        private void MainMenu_power_Click(object sender, EventArgs e) {
+            PowerForm form = new PowerForm(this, image);
+            if (form.ShowDialog() == DialogResult.OK) {
+                image = form.image;
+            } else {
+                MainCanvas.Image = image.toBitmap();
+            }
+        }
+
+        private void MainMenu_lincor_Click(object sender, EventArgs e) {
+            MinMax<double> mm = new MinMax<double>() {
+                min = double.MaxValue
+            };
+
+            Tools.CalcHist(image, true);
+            image.do_image(hist_minmax, hIter, mm);
+            if (USE_HSV) {
+                throw new NotImplementedException();
+            } else {
+                image.do_image(linear_correction, imIter, mm, true)
+                    .do_image(rgb_fromyuv, imIter, true);
+            }
+            MainCanvas.Image = image.toBitmap();
         }
 
         private void MainMenu_filter_Click(object sender, EventArgs e) {

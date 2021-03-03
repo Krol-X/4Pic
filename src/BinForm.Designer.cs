@@ -29,7 +29,6 @@
             this.track_thr = new System.Windows.Forms.TrackBar();
             this.button_cancel = new System.Windows.Forms.Button();
             this.button_ok = new System.Windows.Forms.Button();
-            this.checkbox_adaptive = new System.Windows.Forms.CheckBox();
             this.ud_bin = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.track_thr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ud_bin)).BeginInit();
@@ -76,16 +75,6 @@
             this.button_ok.Text = "ОК";
             this.button_ok.UseVisualStyleBackColor = true;
             // 
-            // checkbox_adaptive
-            // 
-            this.checkbox_adaptive.AutoSize = true;
-            this.checkbox_adaptive.Location = new System.Drawing.Point(356, 52);
-            this.checkbox_adaptive.Name = "checkbox_adaptive";
-            this.checkbox_adaptive.Size = new System.Drawing.Size(86, 17);
-            this.checkbox_adaptive.TabIndex = 14;
-            this.checkbox_adaptive.Text = "Адаптивная";
-            this.checkbox_adaptive.UseVisualStyleBackColor = true;
-            // 
             // ud_bin
             // 
             this.ud_bin.Location = new System.Drawing.Point(56, 20);
@@ -107,7 +96,6 @@
             this.CancelButton = this.button_cancel;
             this.ClientSize = new System.Drawing.Size(454, 106);
             this.Controls.Add(this.ud_bin);
-            this.Controls.Add(this.checkbox_adaptive);
             this.Controls.Add(this.button_cancel);
             this.Controls.Add(this.button_ok);
             this.Controls.Add(this.label1);
@@ -129,7 +117,6 @@
         private System.Windows.Forms.TrackBar track_thr;
         private System.Windows.Forms.Button button_cancel;
         private System.Windows.Forms.Button button_ok;
-        private System.Windows.Forms.CheckBox checkbox_adaptive;
         private System.Windows.Forms.NumericUpDown ud_bin;
     }
 }

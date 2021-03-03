@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace _4Pic.src
 {
@@ -62,6 +60,9 @@ namespace _4Pic.src
         }
 
         public TBitmap do_image(do_hnd f, do_iter iter, bool use_parallel = false) {
+            //Console.WriteLine(f.Method);
+            //Console.WriteLine(iter.Method);
+            //Console.WriteLine();
             var it = iter(this);
 
             if (use_parallel) {

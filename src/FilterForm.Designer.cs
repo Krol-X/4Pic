@@ -36,6 +36,7 @@
             this.dialog_save = new System.Windows.Forms.SaveFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.status_label = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cb_freq = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,7 +65,7 @@
             // button_cancel
             // 
             this.button_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button_cancel.Location = new System.Drawing.Point(142, 278);
+            this.button_cancel.Location = new System.Drawing.Point(142, 297);
             this.button_cancel.Name = "button_cancel";
             this.button_cancel.Size = new System.Drawing.Size(110, 23);
             this.button_cancel.TabIndex = 7;
@@ -73,7 +74,7 @@
             // 
             // button_ok
             // 
-            this.button_ok.Location = new System.Drawing.Point(12, 278);
+            this.button_ok.Location = new System.Drawing.Point(12, 297);
             this.button_ok.Name = "button_ok";
             this.button_ok.Size = new System.Drawing.Size(110, 23);
             this.button_ok.TabIndex = 6;
@@ -83,7 +84,7 @@
             // 
             // button_preview
             // 
-            this.button_preview.Location = new System.Drawing.Point(12, 249);
+            this.button_preview.Location = new System.Drawing.Point(12, 268);
             this.button_preview.Name = "button_preview";
             this.button_preview.Size = new System.Drawing.Size(240, 23);
             this.button_preview.TabIndex = 5;
@@ -125,7 +126,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.status_label});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 312);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 324);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(264, 22);
             this.statusStrip1.SizingGrip = false;
@@ -138,13 +139,26 @@
             this.status_label.Size = new System.Drawing.Size(38, 17);
             this.status_label.Text = "Готов";
             // 
+            // cb_freq
+            // 
+            this.cb_freq.AutoSize = true;
+            this.cb_freq.Enabled = false;
+            this.cb_freq.Location = new System.Drawing.Point(172, 245);
+            this.cb_freq.Name = "cb_freq";
+            this.cb_freq.Size = new System.Drawing.Size(80, 17);
+            this.cb_freq.TabIndex = 9;
+            this.cb_freq.Text = "Частотная";
+            this.cb_freq.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.cb_freq.UseVisualStyleBackColor = true;
+            // 
             // FilterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.button_cancel;
-            this.ClientSize = new System.Drawing.Size(264, 334);
+            this.ClientSize = new System.Drawing.Size(264, 346);
             this.ControlBox = false;
+            this.Controls.Add(this.cb_freq);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.button_save);
             this.Controls.Add(this.button_preview);
@@ -178,5 +192,6 @@
         private System.Windows.Forms.SaveFileDialog dialog_save;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel status_label;
+        private System.Windows.Forms.CheckBox cb_freq;
     }
 }
