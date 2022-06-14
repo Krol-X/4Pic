@@ -9,7 +9,7 @@ using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
-    public partial class FilterForm : Form
+    public partial class FilterDialogForm : Form
     {
         private TBitmap srcimage, curimage;
         private FFT fft;
@@ -25,7 +25,7 @@ namespace _4Pic.src
 
 
 
-        public FilterForm(Form owner, TBitmap image) {
+        public FilterDialogForm(Form owner, TBitmap image) {
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;

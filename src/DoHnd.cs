@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static _4Pic.src.BinForm;
+using static _4Pic.src.BinDialogForm;
 using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src

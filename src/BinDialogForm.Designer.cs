@@ -1,6 +1,6 @@
 ﻿namespace _4Pic.src
 {
-    partial class BinForm
+    partial class BinDialogForm
     {
         /// <summary>
         /// Required designer variable.

@@ -108,26 +108,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\4lang.cs" />
-    <Compile Include="src\BinForm.cs">
+    <Compile Include="src\BinDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\BinForm.Designer.cs">
-      <DependentUpon>BinForm.cs</DependentUpon>
+    <Compile Include="src\BinDialogForm.Designer.cs">
+      <DependentUpon>BinDialogForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\BriContForm.cs">
+    <Compile Include="src\BriContDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\BriContForm.Designer.cs">
-      <DependentUpon>BriContForm.cs</DependentUpon>
+    <Compile Include="src\BriContDialogForm.Designer.cs">
+      <DependentUpon>BriContDialogForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\DoCV.cs" />
     <Compile Include="src\DoHnd.cs" />
     <Compile Include="src\FFT.cs" />
-    <Compile Include="src\FilterForm.cs">
+    <Compile Include="src\FilterDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\FilterForm.Designer.cs">
-      <DependentUpon>FilterForm.cs</DependentUpon>
+    <Compile Include="src\FilterDialogForm.Designer.cs">
+      <DependentUpon>FilterDialogForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Interpreter.cs" />
     <Compile Include="src\MainForm.cs">
@@ -136,11 +136,11 @@
     <Compile Include="src\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\PowerForm.cs">
+    <Compile Include="src\PowerDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\PowerForm.Designer.cs">
-      <DependentUpon>PowerForm.cs</DependentUpon>
+    <Compile Include="src\PowerDialogForm.Designer.cs">
+      <DependentUpon>PowerDialogForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -156,20 +156,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="src\BinForm.resx">
-      <DependentUpon>BinForm.cs</DependentUpon>
+    <EmbeddedResource Include="src\BinDialogForm.resx">
+      <DependentUpon>BinDialogForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\BriContForm.resx">
-      <DependentUpon>BriContForm.cs</DependentUpon>
+    <EmbeddedResource Include="src\BriContDialogForm.resx">
+      <DependentUpon>BriContDialogForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\FilterForm.resx">
-      <DependentUpon>FilterForm.cs</DependentUpon>
+    <EmbeddedResource Include="src\FilterDialogForm.resx">
+      <DependentUpon>FilterDialogForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\PowerForm.resx">
-      <DependentUpon>PowerForm.cs</DependentUpon>
+    <EmbeddedResource Include="src\PowerDialogForm.resx">
+      <DependentUpon>PowerDialogForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

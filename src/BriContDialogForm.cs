@@ -6,7 +6,7 @@ using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
-    public partial class BriConForm : Form
+    public partial class BriConDialogForm : Form
     {
         private TBitmap srcimage, curimage;
         public TBitmap image
@@ -23,7 +23,7 @@ namespace _4Pic.src
 
 
 
-        public BriConForm(Form owner, TBitmap image) {
+        public BriConDialogForm(Form owner, TBitmap image) {
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;

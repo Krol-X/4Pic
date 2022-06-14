@@ -6,7 +6,7 @@ using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
-    public partial class BinForm : Form {
+    public partial class BinDialogForm : Form {
         private TBitmap srcimage, curimage;
         public TBitmap image
         {
@@ -19,7 +19,7 @@ namespace _4Pic.src
 
 
 
-        public BinForm(Form owner, TBitmap image) {
+        public BinDialogForm(Form owner, TBitmap image) {
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;

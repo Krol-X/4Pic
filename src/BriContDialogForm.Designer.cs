@@ -1,6 +1,6 @@
 ﻿namespace _4Pic.src
 {
-    partial class BriConForm
+    partial class BriConDialogForm
     {
         /// <summary>
         /// Required designer variable.

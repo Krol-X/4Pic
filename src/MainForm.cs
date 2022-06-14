@@ -114,7 +114,7 @@ namespace _4Pic
         }
 
         private void MainMenu_tobinary_Click(object sender, EventArgs e) {
-            BinForm form = new BinForm(this, image);
+            BinDialogForm form = new BinDialogForm(this, image);
             if (form.ShowDialog() == DialogResult.OK) {
                 image = form.image;
             } else {
@@ -123,7 +123,7 @@ namespace _4Pic
         }
 
         private void MainMenu_bri_con_Click(object sender, EventArgs e) {
-            BriConForm form = new BriConForm(this, image);
+            BriConDialogForm form = new BriConDialogForm(this, image);
             if (form.ShowDialog() == DialogResult.OK) {
                 image = form.image;
             } else {
@@ -132,7 +132,7 @@ namespace _4Pic
         }
 
         private void MainMenu_power_Click(object sender, EventArgs e) {
-            PowerForm form = new PowerForm(this, image);
+            PowerDialogForm form = new PowerDialogForm(this, image);
             if (form.ShowDialog() == DialogResult.OK) {
                 image = form.image;
             } else {
@@ -157,7 +157,7 @@ namespace _4Pic
         }
 
         private void MainMenu_filter_Click(object sender, EventArgs e) {
-            FilterForm form = new FilterForm(this, image);
+            FilterDialogForm form = new FilterDialogForm(this, image);
             if (form.ShowDialog() == DialogResult.OK) {
                 image = form.image;
             } else {

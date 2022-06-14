@@ -1,6 +1,6 @@
 ﻿namespace _4Pic.src
 {
-    partial class PowerForm
+    partial class PowerDialogForm
     {
         /// <summary>
         /// Required designer variable.

@@ -5,7 +5,7 @@ using static _4Pic.src.TBitmap;
 
 namespace _4Pic.src
 {
-    public partial class PowerForm : Form
+    public partial class PowerDialogForm : Form
     {
         private TBitmap srcimage, curimage;
         public TBitmap image
@@ -19,7 +19,7 @@ namespace _4Pic.src
 
 
 
-        public PowerForm(Form owner, TBitmap image) {
+        public PowerDialogForm(Form owner, TBitmap image) {
             InitializeComponent();
             this.Owner = owner;
             this.srcimage = image;
