@@ -68,7 +68,7 @@ namespace _4Pic
             MainMenu_bri_con.Enabled = enabled;
             MainMenu_filter.Enabled = enabled;
             MainMenu_figures.Enabled = enabled;
-            MainMenu_opencv.Enabled = enabled;
+            MainMenu_OpenCV.Enabled = enabled;
             MainMenu_Script.Enabled = enabled;
             imgScaleComboBox.Enabled = enabled;
 
@@ -226,18 +226,28 @@ namespace _4Pic
 
         private void MainMenu_figures_Click(object sender, EventArgs e)
         {
-            var new_im = DoCV.RecognizeFigures(adapter.Current);
-            adapter.add(new_im);
+            var result = DoCV.RecognizeFigures(adapter.Current);
+            adapter.add(result);
         }
 
-        private void imgScaleComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        #endregion
+
+        #region MainMenu_OpenCV Handlers
+
+        private void MainMenu_cvcontrast_Click(object sender, EventArgs e)
         {
-            setScale(imgScaleComboBox.SelectedIndex);
+            var result = DoCV.ApplyClaheContrast(adapter.Current);
+            adapter.add(result);
         }
 
         #endregion
 
         #region Helpers
+
+        private void imgScaleComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            setScale(imgScaleComboBox.SelectedIndex);
+        }
 
         private void setScale(int index)
         {

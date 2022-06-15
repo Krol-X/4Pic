@@ -15,7 +15,7 @@ namespace _4Pic.src
             get { return curimage; }
             set {
                 curimage = value;
-                adapter.Draw(curimage);
+                adapter.Preview(curimage);
             }
         }
 

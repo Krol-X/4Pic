@@ -49,6 +49,7 @@
             this.MainMenu_filter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.MainMenu_figures = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_OpenCV = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu_Script = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu_Run = new System.Windows.Forms.ToolStripMenuItem();
             this.imgScaleComboBox = new System.Windows.Forms.ToolStripComboBox();
@@ -56,7 +57,10 @@
             this.OpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveAsDialog = new System.Windows.Forms.SaveFileDialog();
             this.FlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.MainMenu_opencv = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_cvblur = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_cvclearness = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainMenu_cvcontrast = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainCanvas)).BeginInit();
             this.FlowPanel.SuspendLayout();
@@ -67,7 +71,7 @@
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MainMenu_File,
             this.MainMenu_Image,
-            this.MainMenu_opencv,
+            this.MainMenu_OpenCV,
             this.MainMenu_Script,
             this.imgScaleComboBox});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
@@ -134,7 +138,7 @@
             // MainMenu_undoall
             // 
             this.MainMenu_undoall.Name = "MainMenu_undoall";
-            this.MainMenu_undoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
+            this.MainMenu_undoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
             | System.Windows.Forms.Keys.Z)));
             this.MainMenu_undoall.Size = new System.Drawing.Size(251, 22);
             this.MainMenu_undoall.Text = "Отменить всё";
@@ -159,7 +163,7 @@
             // MainMenu_redoall
             // 
             this.MainMenu_redoall.Name = "MainMenu_redoall";
-            this.MainMenu_redoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
+            this.MainMenu_redoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
             | System.Windows.Forms.Keys.Y)));
             this.MainMenu_redoall.Size = new System.Drawing.Size(251, 22);
             this.MainMenu_redoall.Text = "Повторить всё";
@@ -242,6 +246,17 @@
             this.MainMenu_figures.Text = "Распознать фигуры";
             this.MainMenu_figures.Click += new System.EventHandler(this.MainMenu_figures_Click);
             // 
+            // MainMenu_OpenCV
+            // 
+            this.MainMenu_OpenCV.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MainMenu_cvblur,
+            this.MainMenu_cvclearness,
+            this.MainMenu_cvcontrast,
+            this.toolStripSeparator3});
+            this.MainMenu_OpenCV.Name = "MainMenu_OpenCV";
+            this.MainMenu_OpenCV.Size = new System.Drawing.Size(63, 23);
+            this.MainMenu_OpenCV.Text = "OpenCV";
+            // 
             // MainMenu_Script
             // 
             this.MainMenu_Script.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -298,11 +313,29 @@
             this.FlowPanel.Size = new System.Drawing.Size(560, 344);
             this.FlowPanel.TabIndex = 2;
             // 
-            // openCVToolStripMenuItem
+            // MainMenu_cvblur
             // 
-            this.MainMenu_opencv.Name = "openCVToolStripMenuItem";
-            this.MainMenu_opencv.Size = new System.Drawing.Size(63, 23);
-            this.MainMenu_opencv.Text = "OpenCV";
+            this.MainMenu_cvblur.Name = "MainMenu_cvblur";
+            this.MainMenu_cvblur.Size = new System.Drawing.Size(223, 22);
+            this.MainMenu_cvblur.Text = "Увеличить размытие";
+            // 
+            // MainMenu_cvclearness
+            // 
+            this.MainMenu_cvclearness.Name = "MainMenu_cvclearness";
+            this.MainMenu_cvclearness.Size = new System.Drawing.Size(223, 22);
+            this.MainMenu_cvclearness.Text = "Увеличить чёткость";
+            // 
+            // MainMenu_cvcontrast
+            // 
+            this.MainMenu_cvcontrast.Name = "MainMenu_cvcontrast";
+            this.MainMenu_cvcontrast.Size = new System.Drawing.Size(223, 22);
+            this.MainMenu_cvcontrast.Text = "Увеличить контраст (clahe)";
+            this.MainMenu_cvcontrast.Click += new System.EventHandler(this.MainMenu_cvcontrast_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(220, 6);
             // 
             // MainForm
             // 
@@ -356,7 +389,11 @@
         private System.Windows.Forms.ToolStripMenuItem MainMenu_undo;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_redo;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_redoall;
-        private System.Windows.Forms.ToolStripMenuItem MainMenu_opencv;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_OpenCV;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_cvblur;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_cvclearness;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_cvcontrast;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 

@@ -4,7 +4,6 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using Emgu.CV.CvEnum;
-using System;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -42,10 +41,9 @@ namespace _4Pic.src
                        FontFace.HersheyPlain, 1, color);
         }
 
-        public static Bitmap RecognizeFigures(TBitmap src) {
-            var srcbitmap = src.toBitmap();
-            var im = new Image<Bgr, byte>(srcbitmap);
-            var gray = im
+        public static TBitmap RecognizeFigures(TBitmap src) {
+            var result = new Image<Bgr, byte>(src.toBitmap());
+            var gray = result
                 .Convert<Gray, byte>()
                 .SmoothGaussian(11)
                 .ThresholdBinary(new Gray(244), new Gray(255))
@@ -55,7 +53,7 @@ namespace _4Pic.src
             CvInvoke.FindContours(gray, contours, hierarchy, RetrType.Tree,
                 ChainApproxMethod.ChainApproxSimple);
 
-            int w = im.Width, h = im.Height;
+            int w = result.Width, h = result.Height;
             int dw = (int)(w * PERCENT), dh = (int)(h * PERCENT);
             int w1 = w - dw, h1 = h - dh;
 
@@ -78,40 +76,52 @@ namespace _4Pic.src
                 int y = (int)(moments.M01 / moments.M00);
 
                 if (approx.Size == 3) {
-                    HighlightFigure(im, x, y, contours, i, (int)Fig.triangle);
+                    HighlightFigure(result, x, y, contours, i, (int)Fig.triangle);
                 } else if (approx.Size == 4) {
                     double aspectRatio = (double)rect.Width / rect.Height;
                     if (0.95 <= aspectRatio && aspectRatio <= 1.05) {
-                        HighlightFigure(im, x, y, contours, i, (int)Fig.square);
+                        HighlightFigure(result, x, y, contours, i, (int)Fig.square);
                     } else if (1.2 <= aspectRatio && aspectRatio <= 2.0) {
-                        HighlightFigure(im, x, y, contours, i, (int)Fig.rectangle);
+                        HighlightFigure(result, x, y, contours, i, (int)Fig.rectangle);
                     } else {
-                        HighlightFigure(im, x, y, contours, i, (int)Fig.trapezoid);
+                        HighlightFigure(result, x, y, contours, i, (int)Fig.trapezoid);
                     }
                 } else if (approx.Size == 5) {
-                    HighlightFigure(im, x, y, contours, i, (int)Fig.pentagon);
+                    HighlightFigure(result, x, y, contours, i, (int)Fig.pentagon);
                 } else if (approx.Size == 6) {
-                    HighlightFigure(im, x, y, contours, i, (int)Fig.hexagon);
+                    HighlightFigure(result, x, y, contours, i, (int)Fig.hexagon);
                 } else if (approx.Size > 6) {
                     // PI*R^2 / (2*PI*R)^2 = 1/4*PI = 0.079577
                     double t = area / (perimeter * perimeter);
                     if (0.07 <= t && t <= 0.087) {
-                        HighlightFigure(im, x, y, contours, i, (int)Fig.circle);
+                        HighlightFigure(result, x, y, contours, i, (int)Fig.circle);
                     } else {
-                        HighlightFigure(im, x, y, contours, i, (int)Fig.ellipse);
+                        HighlightFigure(result, x, y, contours, i, (int)Fig.ellipse);
                     }
                 }
             }
-            return im.Bitmap;
+            return new TBitmap(result.Bitmap);
         }
 
-        public static Bitmap ApplyScale(Bitmap src, double scale)
+        public static TBitmap ApplyScale(TBitmap src, double scale)
         {
             if (scale == 1.00)
                 return src;
-            var im = new Image<Bgr, byte>(src);
-            var new_im = im.Resize(scale, Inter.Lanczos4);
-            return new_im.Bitmap;
+            var im = new Image<Bgr, byte>(src.toBitmap());
+            var result = im.Resize(scale, Inter.Lanczos4);
+            return new TBitmap(result.Bitmap);
+        }
+
+        public static TBitmap ApplyClaheContrast(TBitmap src)
+        {
+            // For rgb from: https://stackoverflow.com/questions/25008458/how-to-apply-clahe-on-rgb-color-images
+            var bgr = new Image<Bgr, byte>(src.toBitmap());
+            var lab = bgr.Convert<Lab, byte>();
+            var clache = new Image<Gray, byte>(bgr.Size);
+            CvInvoke.CLAHE(lab[0], 2, new Size(8, 8), clache);
+            lab[0] = clache;
+            var result = lab.Convert<Bgr, byte>();
+            return new TBitmap(result.Bitmap);
         }
     }
 }

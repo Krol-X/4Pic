@@ -40,10 +40,7 @@ namespace _4Pic.src
                 DrawCurrent();
             return this;
         }
-        public PictureBoxAdapter add(Bitmap it)
-        {
-            return add(new TBitmap(it));
-        }
+        public PictureBoxAdapter add(Bitmap it) { return add(new TBitmap(it)); }
 
         public void HistClear() { data.Clear(); }
 
@@ -82,21 +79,18 @@ namespace _4Pic.src
             set { scale = (value > 0) ? value : 1.00; }
         }
 
-        public TBitmap Draw(TBitmap bitmap)
+        public TBitmap Preview(TBitmap bitmap)
         {
-            var scaled_im = DoCV.ApplyScale(bitmap.toBitmap(), scale);
-            box.Image = scaled_im;
+            var scaled_im = DoCV.ApplyScale(bitmap, scale);
+            box.Image = scaled_im.toBitmap();
             onDraw();
             return new TBitmap(scaled_im);
         }
-        public TBitmap Draw(Bitmap bitmap)
-        {
-            return Draw(new TBitmap(bitmap));
-        }
+        public TBitmap Preview(Bitmap bitmap) { return Preview(new TBitmap(bitmap)); }
 
         public TBitmap DrawCurrent()
         {
-            return (data.Count > 0) ? Draw(Current) : null;
+            return (data.Count > 0) ? Preview(Current) : null;
         }
 
         public void SaveImage(string path)
