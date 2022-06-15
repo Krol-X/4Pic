@@ -8,13 +8,14 @@ namespace _4Pic.src
 {
     public partial class BriConDialogForm : Form
     {
-        private TBitmap srcimage, curimage;
+        private PictureBoxAdapter adapter;
+        private TBitmap curimage;
         public TBitmap image
         {
             get { return curimage; }
             set {
                 curimage = value;
-                ((MainForm)Owner).MainCanvas.Image = curimage.toBitmap();
+                adapter.Draw(curimage);
             }
         }
 
@@ -23,10 +24,10 @@ namespace _4Pic.src
 
 
 
-        public BriConDialogForm(Form owner, TBitmap image) {
+        public BriConDialogForm(Form owner, PictureBoxAdapter adapter) {
             InitializeComponent();
             this.Owner = owner;
-            this.srcimage = image;
+            this.adapter = adapter;
             on_change(track_bri.Value, track_con.Value);
         }
 
@@ -53,7 +54,7 @@ namespace _4Pic.src
 
             bool USE_hsv = DoHnd.USE_HSV;
 
-            TBitmap im = srcimage.clone();
+            TBitmap im = adapter.Current.clone();
             if (USE_hsv) {
                 im.do_image(hsv_fromrgb, imIter, true);
 

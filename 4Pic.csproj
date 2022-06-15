@@ -120,6 +120,7 @@
     <Compile Include="src\BriContDialogForm.Designer.cs">
       <DependentUpon>BriContDialogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\PictureBoxAdapter.cs" />
     <Compile Include="src\DoCV.cs" />
     <Compile Include="src\DoHnd.cs" />
     <Compile Include="src\FFT.cs" />

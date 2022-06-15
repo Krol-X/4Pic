@@ -11,7 +11,8 @@ namespace _4Pic.src
 {
     public partial class FilterDialogForm : Form
     {
-        private TBitmap srcimage, curimage;
+        private PictureBoxAdapter adapter;
+        private TBitmap curimage;
         private FFT fft;
 
         public TBitmap image
@@ -19,16 +20,16 @@ namespace _4Pic.src
             get { return curimage; }
             set {
                 curimage = value;
-                ((MainForm)Owner).MainCanvas.Image = curimage.toBitmap();
+                adapter.Draw(curimage);
             }
         }
 
 
 
-        public FilterDialogForm(Form owner, TBitmap image) {
+        public FilterDialogForm(Form owner, PictureBoxAdapter adapter) {
             InitializeComponent();
             this.Owner = owner;
-            this.srcimage = image;
+            this.adapter = adapter;
             combo_type.SelectedIndex = 0;
         }
 
@@ -110,9 +111,11 @@ namespace _4Pic.src
             }
 
             int i = combo_type.SelectedIndex;
-            TBitmap im, srcfft;
+            TBitmap srcfft;
+            var im = adapter.Current.clone();
             if (fourier) {
-                fft = new FFT(srcimage.toBitmap());
+                
+                fft = new FFT(im.toBitmap());
                 fft.ForwardFFT();
                 fft.FFTShift();
                 // todo: codeit
@@ -124,8 +127,7 @@ namespace _4Pic.src
 
 
             } else {
-                im = srcimage.clone();
-                mat.src = srcimage;
+                mat.src = im;
 
                 do_hnd<TFilterData>[] filter = { filter_simple, filter_average, filter_median };
                 image = im.do_image<TFilterData>(filter[i], imIter, mat, true);

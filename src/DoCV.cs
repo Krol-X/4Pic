@@ -42,8 +42,9 @@ namespace _4Pic.src
                        FontFace.HersheyPlain, 1, color);
         }
 
-        public static Bitmap RecognizeFigures(Bitmap src) {
-            var im = new Image<Bgr, byte>(src);
+        public static Bitmap RecognizeFigures(TBitmap src) {
+            var srcbitmap = src.toBitmap();
+            var im = new Image<Bgr, byte>(srcbitmap);
             var gray = im
                 .Convert<Gray, byte>()
                 .SmoothGaussian(11)
@@ -102,6 +103,15 @@ namespace _4Pic.src
                 }
             }
             return im.Bitmap;
+        }
+
+        public static Bitmap ApplyScale(Bitmap src, double scale)
+        {
+            if (scale == 1.00)
+                return src;
+            var im = new Image<Bgr, byte>(src);
+            var new_im = im.Resize(scale, Inter.Lanczos4);
+            return new_im.Bitmap;
         }
     }
 }

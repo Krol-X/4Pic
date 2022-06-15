@@ -7,22 +7,23 @@ namespace _4Pic.src
 {
     public partial class PowerDialogForm : Form
     {
-        private TBitmap srcimage, curimage;
+        private PictureBoxAdapter adapter;
+        private TBitmap curimage;
         public TBitmap image
         {
             get { return curimage; }
             set {
                 curimage = value;
-                ((MainForm)Owner).MainCanvas.Image = curimage.toBitmap();
+                adapter.Draw(curimage);
             }
         }
 
 
 
-        public PowerDialogForm(Form owner, TBitmap image) {
+        public PowerDialogForm(Form owner, PictureBoxAdapter adapter) {
             InitializeComponent();
             this.Owner = owner;
-            this.srcimage = image;
+            this.adapter = adapter;
             on_change(track_k.Value, track_c.Value);
         }
 
@@ -48,7 +49,7 @@ namespace _4Pic.src
             ud_k.Value = track_k.Value = k;
             ud_c.Value = track_c.Value = c;
 
-            TBitmap im = srcimage.clone();
+            TBitmap im = adapter.Current.clone();
             TPowerArg arg = new TPowerArg(k, c);
 
             image = im.do_image(yuv_fromrgb, imIter, true)
