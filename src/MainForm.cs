@@ -29,6 +29,7 @@ namespace _4Pic
             adapter = new PictureBoxAdapter(MainCanvas);
             adapter.onDraw = MainMenu_update;
             setScale(DEFAULT_SCALE);
+            MainMenu_update();
         }
 
         private void MainForm_MouseWheel(object sender, MouseEventArgs e)
@@ -67,6 +68,7 @@ namespace _4Pic
             MainMenu_bri_con.Enabled = enabled;
             MainMenu_filter.Enabled = enabled;
             MainMenu_figures.Enabled = enabled;
+            MainMenu_opencv.Enabled = enabled;
             MainMenu_Script.Enabled = enabled;
             imgScaleComboBox.Enabled = enabled;
 

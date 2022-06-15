@@ -11,8 +11,10 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing && (components != null)) {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -24,7 +26,8 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.MainMenu_File = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu_Open = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +56,7 @@
             this.OpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveAsDialog = new System.Windows.Forms.SaveFileDialog();
             this.FlowPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.MainMenu_opencv = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainCanvas)).BeginInit();
             this.FlowPanel.SuspendLayout();
@@ -63,6 +67,7 @@
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MainMenu_File,
             this.MainMenu_Image,
+            this.MainMenu_opencv,
             this.MainMenu_Script,
             this.imgScaleComboBox});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
@@ -129,7 +134,7 @@
             // MainMenu_undoall
             // 
             this.MainMenu_undoall.Name = "MainMenu_undoall";
-            this.MainMenu_undoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            this.MainMenu_undoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
             | System.Windows.Forms.Keys.Z)));
             this.MainMenu_undoall.Size = new System.Drawing.Size(251, 22);
             this.MainMenu_undoall.Text = "Отменить всё";
@@ -154,7 +159,7 @@
             // MainMenu_redoall
             // 
             this.MainMenu_redoall.Name = "MainMenu_redoall";
-            this.MainMenu_redoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            this.MainMenu_redoall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt)
             | System.Windows.Forms.Keys.Y)));
             this.MainMenu_redoall.Size = new System.Drawing.Size(251, 22);
             this.MainMenu_redoall.Text = "Повторить всё";
@@ -263,7 +268,7 @@
             "150%",
             "200%"});
             this.imgScaleComboBox.Name = "imgScaleComboBox";
-            this.imgScaleComboBox.Size = new System.Drawing.Size(121, 23);
+            this.imgScaleComboBox.Size = new System.Drawing.Size(75, 23);
             this.imgScaleComboBox.SelectedIndexChanged += new System.EventHandler(this.imgScaleComboBox_SelectedIndexChanged);
             // 
             // MainCanvas
@@ -292,6 +297,12 @@
             this.FlowPanel.Name = "FlowPanel";
             this.FlowPanel.Size = new System.Drawing.Size(560, 344);
             this.FlowPanel.TabIndex = 2;
+            // 
+            // openCVToolStripMenuItem
+            // 
+            this.MainMenu_opencv.Name = "openCVToolStripMenuItem";
+            this.MainMenu_opencv.Size = new System.Drawing.Size(63, 23);
+            this.MainMenu_opencv.Text = "OpenCV";
             // 
             // MainForm
             // 
@@ -345,6 +356,7 @@
         private System.Windows.Forms.ToolStripMenuItem MainMenu_undo;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_redo;
         private System.Windows.Forms.ToolStripMenuItem MainMenu_redoall;
+        private System.Windows.Forms.ToolStripMenuItem MainMenu_opencv;
     }
 }
 
